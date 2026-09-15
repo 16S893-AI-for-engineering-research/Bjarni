@@ -172,8 +172,37 @@ p.lead{ font-size:clamp(15px,1.6vw,19px); color:var(--muted); max-width:60ch; }
 }
 
 /* ---------- parallax layers (home hero) ---------- */
-.parallax-stage{ position:relative; height: 78vh; min-height:520px; overflow:hidden; border-radius:22px; border:1px solid var(--card-bd); }
+.parallax-stage{ position:relative; height: 78vh; min-height:520px; overflow:hidden; border-radius:22px; border:1px solid var(--card-bd); background:#05070b; }
 .parallax-layer{ position:absolute; inset:0; will-change: transform; }
+
+/* ---------- hero photo cross-fade ---------- */
+.hero-photo{
+  position:absolute; inset:0; opacity:0; transition:opacity 1s ease;
+  background-size:cover; background-position:center;
+}
+.hero-photo.active{ opacity:1; }
+.hero-photo::after{
+  content:""; position:absolute; inset:0;
+  background:linear-gradient(180deg, rgba(4,5,9,.25) 0%, rgba(4,5,9,.15) 45%, rgba(4,5,9,.85) 100%);
+}
+
+/* ---------- airframe preview card photos ---------- */
+.config-card-photo{
+  position:relative; width:100%; aspect-ratio:16/10; border-radius:12px; overflow:hidden;
+  background:#05070b;
+}
+.config-card-photo img{
+  width:100%; height:100%; object-fit:cover; display:block;
+  transition:transform .5s ease;
+}
+.card:hover .config-card-photo img{ transform:scale(1.06); }
+/* credit sits as its own caption line under the photo, not overlaid on top of
+   it — avoids clipping/overlap for longer attribution strings. */
+.photo-credit{
+  font-family:var(--mono); font-size:10px; letter-spacing:.02em;
+  color:var(--faint); line-height:1.4;
+  margin:7px 0 14px;
+}
 
 /* ---------- scroll reveal ---------- */
 .reveal{ opacity:0; transform: translateY(26px); transition: opacity .7s ease, transform .7s ease; }

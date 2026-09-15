@@ -32,19 +32,17 @@
     </div>
   </section>
 
-  <!-- ============ HERO STAGE (D3 morphing aircraft) ============ -->
+  <!-- ============ HERO STAGE (photo cross-fade) ============ -->
   <section style="padding-top:10px;">
     <div class="wrap">
-      <div id="hero-stage" class="parallax-stage" style="background:
-          radial-gradient(60% 60% at 30% 20%, rgba(232,176,75,.10), transparent 60%),
-          radial-gradient(60% 60% at 75% 80%, rgba(95,210,194,.10), transparent 60%),
-          rgba(255,255,255,.02);">
-        <div class="parallax-layer" data-speed="0.06" style="z-index:1; inset:auto; position:absolute; top:20px; left:24px;">
+      <div id="hero-stage" class="parallax-stage">
+        <div id="hero-photos" style="position:absolute; inset:0;"></div>
+        <div class="parallax-layer" data-speed="0.06" style="z-index:2; inset:auto; position:absolute; top:20px; left:24px;">
           <span class="pill">design-space explorer</span>
         </div>
-        <div class="parallax-layer" style="z-index:1; position:absolute; bottom:22px; width:100%; text-align:center;">
-          <div id="hero-caption" style="font-family:var(--mono); letter-spacing:.06em; color:var(--muted); font-size:14px; transition:opacity .35s;">Tube &amp; Wing</div>
-          <div class="small mt-8">hover / scroll — the fleet keeps shifting shape</div>
+        <div class="parallax-layer" style="z-index:2; position:absolute; bottom:0; width:100%; text-align:center; background:linear-gradient(to top, rgba(4,5,9,.88), transparent); padding:36px 0 18px;">
+          <div id="hero-caption" style="font-family:var(--mono); letter-spacing:.06em; color:var(--ink); font-size:15px; font-weight:600; transition:opacity .35s;">Tube &amp; Wing</div>
+          <div id="hero-credit" class="small mt-8">hover / scroll — the fleet keeps shifting shape</div>
         </div>
       </div>
     </div>
@@ -100,11 +98,8 @@
         <h2>Four shapes, one optimizer</h2>
         <p class="lead">Beyond fuel, we're also stretching TASOPT across radically different airframe families — full detail on the project page.</p>
       </div>
-      <div class="grid cols-4 mt-24 reveal">
-        <div class="card"><h3>Tube &amp; Wing</h3><p>The baseline. Cylindrical fuselage, swept wing.</p></div>
-        <div class="card"><h3>Double-Bubble</h3><p>Fused twin cylinders, wide flat cross-section, BLI aft engines.</p></div>
-        <div class="card"><h3>Blended Wing Body</h3><p>Fuselage <em>is</em> the wing. Huge aero/structure coupling.</p></div>
-        <div class="card"><h3>Truss-Braced Wing</h3><p>A strut unloads the root — ultra-high aspect ratio wings.</p></div>
+      <div class="grid cols-4 mt-24 reveal" id="config-preview-grid">
+        <!-- populated by js/home.js from data/aircraft.js so photos + credits stay data-driven -->
       </div>
       <div class="center mt-24 reveal">
         <a href="project.html" class="btn primary">Explore the full config × size matrix →</a>

@@ -1,155 +1,92 @@
 // js/home.js
-// Home page D3 visuals:
-//   1. Hero "shape-shifting aircraft" — cross-fading + floating SVG silhouettes
-//      cycling through tube&wing / D8 / BWB / TBW.
+// Home page visuals:
+//   1. Hero — cross-fading real aircraft photography (data/aircraft.js),
+//      cycling through tube&wing / D8 / BWB / TBW with credit captions.
 //   2. Fuel energy-density scatter (gravimetric vs volumetric LHV), D3, with
 //      hover tooltips and category coloring.
 //   3. Animated stat counters.
+//   4. Airframe preview cards (photo + credit + blurb), data-driven.
 
 document.addEventListener("DOMContentLoaded", () => {
   initHero();
   initFuelScatter("fuel-scatter");
   initCounters();
+  initConfigPreviewCards();
 });
 
 // exposed so other pages (e.g. project.html) can render the same chart
 // into a differently-named container without re-running the hero/counters.
 window.renderFuelScatter = initFuelScatter;
 
-/* ============================== 1. HERO ============================== */
+/* ============================== 1. HERO (real aircraft photos) ============================== */
+// Cross-fades through the four airframe photos in data/aircraft.js (CONFIGS),
+// rather than drawing stylized D3 silhouettes — real photography reads much
+// better at hero size and gives proper credit to the source images.
 
 function initHero() {
   const stage = document.getElementById("hero-stage");
-  if (!stage) return;
-
-  const width = stage.clientWidth || 900;
-  const height = stage.clientHeight || 500;
-
-  const svg = d3.select(stage)
-    .append("svg")
-    .attr("viewBox", `0 0 ${width} ${height}`)
-    .attr("preserveAspectRatio", "xMidYMid meet")
-    .attr("class", "parallax-layer")
-    .style("z-index", 3);
-
-  const cx = width / 2, cy = height / 2 - 10;
-
-  // Faint orbit rings (pure decoration, different scroll speeds handled via data-speed on container)
-  const rings = svg.append("g").attr("class", "rings").attr("opacity", 0.25);
-  [1, 1.5, 2].forEach((s, i) => {
-    rings.append("ellipse")
-      .attr("cx", cx).attr("cy", cy)
-      .attr("rx", 160 * s).attr("ry", 60 * s)
-      .attr("fill", "none")
-      .attr("stroke", i === 1 ? "var(--cryo)" : "var(--jetA)")
-      .attr("stroke-width", 1)
-      .attr("stroke-dasharray", "2,6");
-  });
-
-  const g = svg.append("g").attr("transform", `translate(${cx},${cy})`);
-
-  // Four silhouette groups, drawn with simple path primitives, one active at a time.
-  const shapes = {
-    tubeWing: drawTubeWing(g),
-    d8: drawD8(g),
-    bwb: drawBWB(g),
-    tbw: drawTBW(g)
-  };
-  Object.values(shapes).forEach(s => s.attr("opacity", 0));
-
-  const order = ["tubeWing", "d8", "bwb", "tbw"];
-  const labels = {
-    tubeWing: "Tube & Wing",
-    d8: "Double-Bubble (D8)",
-    bwb: "Blended Wing Body",
-    tbw: "Truss-Braced Wing"
-  };
+  const photoLayer = document.getElementById("hero-photos");
+  if (!stage || !photoLayer || typeof CONFIGS === "undefined") return;
 
   const caption = document.getElementById("hero-caption");
+  const creditEl = document.getElementById("hero-credit");
+
+  // build one absolutely-positioned photo div per config
+  const layers = CONFIGS.map((cfg, i) => {
+    const div = document.createElement("div");
+    div.className = "hero-photo" + (i === 0 ? " active" : "");
+    div.style.backgroundImage = `url("${cfg.photo}")`;
+    photoLayer.appendChild(div);
+    return div;
+  });
+
   let idx = 0;
 
-  function showShape(i, animateIn) {
-    const key = order[i];
-    Object.entries(shapes).forEach(([k, sel]) => {
-      sel.transition().duration(700).attr("opacity", k === key ? 1 : 0);
-    });
+  function showConfig(i) {
+    const cfg = CONFIGS[i];
+    layers.forEach((div, k) => div.classList.toggle("active", k === i));
     if (caption) {
       caption.style.opacity = 0;
       setTimeout(() => {
-        caption.textContent = labels[key];
+        caption.textContent = cfg.name;
         caption.style.opacity = 1;
       }, 350);
     }
+    if (creditEl) {
+      creditEl.style.opacity = 0;
+      setTimeout(() => {
+        creditEl.textContent = cfg.photoCredit || "";
+        creditEl.style.opacity = 1;
+      }, 350);
+    }
   }
-  showShape(0);
+  showConfig(0);
 
   setInterval(() => {
-    idx = (idx + 1) % order.length;
-    showShape(idx);
-  }, 3200);
-
-  // gentle bobbing float, independent of the cross-fade
-  d3.timer((elapsed) => {
-    const dy = Math.sin(elapsed / 900) * 6;
-    const rot = Math.sin(elapsed / 1800) * 1.4;
-    g.attr("transform", `translate(${cx},${cy + dy}) rotate(${rot})`);
-  });
-
-  window.addEventListener("resize", () => { /* keep simple: viewBox scales it */ });
+    idx = (idx + 1) % CONFIGS.length;
+    showConfig(idx);
+  }, 4200);
 }
 
-function drawTubeWing(g) {
-  const s = g.append("g");
-  s.append("path").attr("d","M -170,0 Q -160,-10 -120,-11 L 120,-8 Q 155,-7 168,0 Q 155,7 120,8 L -120,11 Q -160,10 -170,0 Z").attr("fill","var(--jetA)").attr("opacity",.9);
-  s.append("path").attr("d","M -10,-4 L -85,-95 Q -75,-98 -62,-92 L -6,-9 Z").attr("fill","var(--ink)").attr("opacity",.92);
-  s.append("path").attr("d","M -10,4 L -85,95 Q -75,98 -62,92 L -6,9 Z").attr("fill","var(--ink)").attr("opacity",.92);
-  s.append("path").attr("d","M -140,0 L -168,-24 Q -160,-10 -160,0 Q -160,10 -168,24 Z").attr("fill","var(--ink)").attr("opacity",.75);
-  return s;
-}
-function drawD8(g) {
-  const s = g.append("g");
-  s.append("path")
-    .attr("d", "M -150,-30 Q -150,-46 -110,-46 L 90,-40 Q 145,-36 150,0 Q 145,36 90,40 L -110,46 Q -150,46 -150,30 Q -158,0 -150,-30 Z")
-    .attr("fill", "var(--cryo)").attr("opacity", .88);
-  s.append("path").attr("d", "M -110,-44 Q -30,-30 -30,0 Q -30,30 -110,44").attr("fill", "none").attr("stroke", "var(--bg-0)").attr("stroke-width", 2.5).attr("opacity", .55);
-  s.append("path").attr("d", "M 0,-24 L -70,-115 Q -58,-118 -46,-112 L 10,-30 Z").attr("fill", "var(--ink)").attr("opacity", .92);
-  s.append("path").attr("d", "M 0,24 L -70,115 Q -58,118 -46,112 L 10,30 Z").attr("fill", "var(--ink)").attr("opacity", .92);
-  s.append("ellipse").attr("cx", 78).attr("cy", 22).attr("rx", 22).attr("ry", 10).attr("fill", "var(--ink)").attr("opacity", .85);
-  s.append("ellipse").attr("cx", 78).attr("cy", -22).attr("rx", 22).attr("ry", 10).attr("fill", "var(--ink)").attr("opacity", .85);
-  s.append("path").attr("d", "M 120,-30 L 145,-52 L 138,-30 Z").attr("fill", "var(--ink)").attr("opacity", .7);
-  s.append("path").attr("d", "M 120,30 L 145,52 L 138,30 Z").attr("fill", "var(--ink)").attr("opacity", .7);
-  return s;
-}
-function drawBWB(g) {
-  const s = g.append("g");
-  const path = "M -170,0 " +
-               "Q -140,-14 -80,-18 " +
-               "L 60,-68 " +
-               "Q 95,-80 108,-64 " +
-               "L 40,-20 " +
-               "Q 70,-6 70,0 " +
-               "Q 70,6 40,20 " +
-               "L 108,64 " +
-               "Q 95,80 60,68 " +
-               "L -80,18 " +
-               "Q -140,14 -170,0 Z";
-  s.append("path").attr("d", path).attr("fill", "var(--nondrop)").attr("opacity", .88);
-  s.append("ellipse").attr("cx", -105).attr("cy", 0).attr("rx", 40).attr("ry", 12).attr("fill", "var(--ink)").attr("opacity", .28);
-  s.append("ellipse").attr("cx", 58).attr("cy", -28).attr("rx", 15).attr("ry", 7).attr("fill", "var(--ink)").attr("opacity", .8);
-  s.append("ellipse").attr("cx", 58).attr("cy", 28).attr("rx", 15).attr("ry", 7).attr("fill", "var(--ink)").attr("opacity", .8);
-  s.append("path").attr("d", "M 100,-66 L 114,-78 L 108,-60 Z").attr("fill", "var(--ink)").attr("opacity", .7);
-  s.append("path").attr("d", "M 100,66 L 114,78 L 108,60 Z").attr("fill", "var(--ink)").attr("opacity", .7);
-  return s;
-}
-function drawTBW(g) {
-  const s = g.append("g");
-  s.append("path").attr("d","M -160,0 Q -152,-9 -118,-10 L 118,-7 Q 145,-6 155,0 Q 145,6 118,7 L -118,10 Q -152,9 -160,0 Z").attr("fill", "var(--rose)").attr("opacity", .9);
-  s.append("path").attr("d","M -5,-3 L -145,-70 Q -135,-73 -122,-67 L -1,-8 Z").attr("fill", "var(--ink)").attr("opacity", .92);
-  s.append("path").attr("d","M -5,3 L -145,70 Q -135,73 -122,67 L -1,8 Z").attr("fill", "var(--ink)").attr("opacity", .92);
-  s.append("line").attr("x1",-40).attr("y1",5).attr("x2",-95).attr("y2",48).attr("stroke", "var(--faint)").attr("stroke-width", 3.5);
-  s.append("line").attr("x1",-40).attr("y1",-5).attr("x2",-95).attr("y2",-48).attr("stroke", "var(--faint)").attr("stroke-width", 3.5);
-  s.append("path").attr("d","M -132,0 L -155,-18 Q -148,-8 -148,0 Q -148,8 -155,18 Z").attr("fill", "var(--ink)").attr("opacity", .75);
-  return s;
+/* ==================== airframe preview cards (real photos) ==================== */
+// Populates the "Four shapes, one optimizer" grid on the home page with the
+// same photo + credit data used by the hero, so there's a single source of
+// truth (data/aircraft.js) instead of hard-coded HTML per card.
+
+function initConfigPreviewCards() {
+  const grid = document.getElementById("config-preview-grid");
+  if (!grid || typeof CONFIGS === "undefined") return;
+
+  grid.innerHTML = CONFIGS.map(cfg => `
+    <div class="card">
+      <div class="config-card-photo">
+        <img src="${cfg.photo}" alt="${cfg.name}" loading="lazy" />
+      </div>
+      <div class="photo-credit">${cfg.photoCredit || ""}</div>
+      <h3>${cfg.name}</h3>
+      <p>${cfg.desc}</p>
+    </div>
+  `).join("");
 }
 
 /* ======================= 2. FUEL ENERGY SCATTER ======================= */
