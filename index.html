@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>TASOPT+ — Expanding Aircraft-Fuel Design Space</title>
+<meta name="description" content="A PhD class project: teaching TASOPT to model radically different fuels and airframes." />
+<link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+<div class="bg"></div>
+<div class="grain"></div>
+<div class="vignette"></div>
+
+<main>
+
+  <!-- ============ HERO ============ -->
+  <section style="padding-top: clamp(30px,5vh,60px);">
+    <div class="wrap">
+      <div class="eyebrow"><span class="dot" style="width:6px;height:6px;border-radius:50%;background:var(--cryo);display:inline-block;"></span> LAE &middot; PhD Class Project</div>
+      <h1>Teaching <span class="grad-text">TASOPT</span> to dream<br/>in thirteen fuels and<br/>four airframes.</h1>
+      <p class="lead mt-16">
+        TASOPT optimizes tube-and-wing aircraft burning Jet-A-like fuel. This project uses an AI coding agent
+        to blow that box wide open — new fuels, new fuselages, new size classes — so we can understand the
+        <em>total system impact</em> of changing what an airplane drinks.
+      </p>
+      <div class="flex gap-16 mt-24" style="flex-wrap:wrap;">
+        <a href="project.html" class="btn primary">See the project outline →</a>
+        <a href="about.html" class="btn">Who's behind this</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ HERO STAGE (D3 morphing aircraft) ============ -->
+  <section style="padding-top:10px;">
+    <div class="wrap">
+      <div id="hero-stage" class="parallax-stage" style="background:
+          radial-gradient(60% 60% at 30% 20%, rgba(232,176,75,.10), transparent 60%),
+          radial-gradient(60% 60% at 75% 80%, rgba(95,210,194,.10), transparent 60%),
+          rgba(255,255,255,.02);">
+        <div class="parallax-layer" data-speed="0.06" style="z-index:1; inset:auto; position:absolute; top:20px; left:24px;">
+          <span class="pill">design-space explorer</span>
+        </div>
+        <div class="parallax-layer" style="z-index:1; position:absolute; bottom:22px; width:100%; text-align:center;">
+          <div id="hero-caption" style="font-family:var(--mono); letter-spacing:.06em; color:var(--muted); font-size:14px; transition:opacity .35s;">Tube &amp; Wing</div>
+          <div class="small mt-8">hover / scroll — the fleet keeps shifting shape</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ STATS STRIP ============ -->
+  <section>
+    <div class="wrap">
+      <div class="grid cols-4 reveal">
+        <div class="card center">
+          <div style="font-family:var(--mono); font-size:38px; font-weight:700; color:var(--jetA);"><span data-count="13">0</span></div>
+          <div class="small mt-8">fuels modeled<br/>(incl. Jet-A reference)</div>
+        </div>
+        <div class="card center">
+          <div style="font-family:var(--mono); font-size:38px; font-weight:700; color:var(--cryo);"><span data-count="4">0</span></div>
+          <div class="small mt-8">airframe configurations</div>
+        </div>
+        <div class="card center">
+          <div style="font-family:var(--mono); font-size:38px; font-weight:700; color:var(--nondrop);"><span data-count="4">0</span></div>
+          <div class="small mt-8">size classes<br/>regional → ultra-widebody</div>
+        </div>
+        <div class="card center">
+          <div style="font-family:var(--mono); font-size:38px; font-weight:700; color:var(--rose);"><span data-count="14">0</span>×</div>
+          <div class="small mt-8">energy density spread,<br/>LH2 vs methanol</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ FUEL SCATTER ============ -->
+  <section>
+    <div class="wrap">
+      <div class="reveal">
+        <div class="eyebrow">why this is hard</div>
+        <h2>Every fuel is its own airplane problem</h2>
+        <p class="lead">
+          Swap Jet-A for liquid hydrogen and you don't just change a number in a fuel-burn equation —
+          you change tank volume, tank mass, CG, wetted area, boil-off, and where the wing spar can even go.
+          Hover the dots.
+        </p>
+      </div>
+      <div class="card mt-24 reveal">
+        <div id="fuel-scatter"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CONFIG PREVIEW STRIP ============ -->
+  <section>
+    <div class="wrap">
+      <div class="reveal">
+        <div class="eyebrow">the airframe axis</div>
+        <h2>Four shapes, one optimizer</h2>
+        <p class="lead">Beyond fuel, we're also stretching TASOPT across radically different airframe families — full detail on the project page.</p>
+      </div>
+      <div class="grid cols-4 mt-24 reveal">
+        <div class="card"><h3>Tube &amp; Wing</h3><p>The baseline. Cylindrical fuselage, swept wing.</p></div>
+        <div class="card"><h3>Double-Bubble</h3><p>Fused twin cylinders, wide flat cross-section, BLI aft engines.</p></div>
+        <div class="card"><h3>Blended Wing Body</h3><p>Fuselage <em>is</em> the wing. Huge aero/structure coupling.</p></div>
+        <div class="card"><h3>Truss-Braced Wing</h3><p>A strut unloads the root — ultra-high aspect ratio wings.</p></div>
+      </div>
+      <div class="center mt-24 reveal">
+        <a href="project.html" class="btn primary">Explore the full config × size matrix →</a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<script src="https://d3js.org/d3.v7.min.js"></script>
+<script src="data/fuels.js"></script>
+<script src="data/aircraft.js"></script>
+<script src="js/nav.js"></script>
+<script src="js/home.js"></script>
+</body>
+</html>

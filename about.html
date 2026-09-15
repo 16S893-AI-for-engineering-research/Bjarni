@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>About Me — TASOPT+</title>
+<link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+<div class="bg"></div>
+<div class="grain"></div>
+<div class="vignette"></div>
+
+<main>
+
+  <section style="padding-bottom:10px;">
+    <div class="wrap">
+      <div class="grid cols-2" style="align-items:center; gap:40px;">
+        <div>
+          <div class="eyebrow">who's behind this</div>
+          <h1>Hi, I'm <span class="grad-text">Bjarni.</span></h1>
+          <p class="lead mt-16">
+            PhD candidate at LAE — the Laboratory for Aviation and the Environment. I started in 2023, and yes,
+            the PhD is taking its sweet time. My research is on alternative fuels for aviation, with a focus on
+            high-level system considerations and pre-screening: which fuels are even worth taking seriously
+            before anyone commits to detailed aircraft integration studies.
+          </p>
+          <p class="mt-16">
+            This site (and the TASOPT+ project it describes) is the natural next step: having screened fuels
+            at a high level, the plan is to model how fuel choice and aircraft design pull on each other —
+            the total system impact of switching what an airplane burns.
+          </p>
+          <p class="mt-16">
+            Outside of the lab: running, biking, skiing, and generally being a bit of a petrol head.
+            Equally happy geeking out over geopolitics, supply chains, commodity markets, and how ideas
+            actually spread through the world — the same systems instinct, just pointed at different systems.
+          </p>
+        </div>
+        <div class="reveal center">
+          <img id="headshot" src="assets/bjarni-profile.jpg" alt="Bjarni Örn Kristinsson"
+               style="width:100%; max-width:340px; border-radius:20px; border:1px solid var(--card-bd); box-shadow:0 24px 60px -20px rgba(0,0,0,.6); cursor:pointer; transition: transform .25s ease, box-shadow .25s ease;" />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="reveal">
+        <div class="eyebrow">the journey so far (and what's next)</div>
+        <h2>A very honest timeline</h2>
+      </div>
+      <div class="card mt-24 reveal">
+        <div id="timeline"></div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="grid cols-2" style="align-items:center;">
+        <div class="reveal">
+          <div class="eyebrow">how the research narrows</div>
+          <h2>From "all fuels" to "this fuel, this aircraft"</h2>
+          <p>
+            Pre-screening is a funnel: start broad across every plausible alternative fuel, apply
+            system-level filters (energy density, production pathway maturity, safety, infrastructure),
+            and narrow down to the handful worth a real aircraft-coupled analysis. TASOPT+ lives at the
+            narrow end of that funnel — and this project is what lets us push more candidates through it
+            faster.
+          </p>
+        </div>
+        <div class="card reveal">
+          <div id="funnel"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="reveal">
+        <div class="eyebrow">back-pocket project ideas</div>
+        <h2>Two other systems problems I think about</h2>
+        <p class="lead">
+          Not aviation, not this PhD — but the same instinct for "model the whole system, find the
+          leverage points" applies. Filed here for whenever there's time (there is never time).
+        </p>
+      </div>
+      <div class="grid cols-2 mt-24 reveal">
+        <div class="card">
+          <h3>Global residential solar policy simulator</h3>
+          <p>
+            A model spanning US counties, Canada, Europe, and Australia that ties together regulation,
+            incentives, tax breaks, and cost structures for residential solar — showing how each policy
+            lever actually lands on different stakeholders. Think an <b>En-ROADS / C-ROADS</b>-style public
+            simulator, but for "should I put solar on my roof, and why does the answer change so much by
+            zip code or postcode."
+          </p>
+        </div>
+        <div class="card">
+          <h3>Grid buildout optimizer</h3>
+          <p>
+            A fast model of electricity grid stability that estimates the impact of adding a given
+            generation or storage source, coupled to a techno-economic + financial layer using current
+            renewable generation/storage capabilities. Goal: rank candidate projects by carbon abatement
+            and IRR, while respecting grid stability and long-run average cost — including the rare,
+            painful low-generation periods that simple averages hide.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="card reveal center" style="padding:44px 32px;">
+        <div class="eyebrow center" style="justify-content:center;">say hi</div>
+        <h2>Questions, collaborations, or PhD-completion pep talks welcome</h2>
+        <p class="lead center" style="margin:0 auto;">Find me at LAE. Or check the project outline for the technical details.</p>
+        <div class="mt-24">
+          <a href="project.html" class="btn primary">← Back to the project outline</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<script src="https://d3js.org/d3.v7.min.js"></script>
+<script src="js/nav.js"></script>
+<script src="js/about.js"></script>
+<script>
+  // easter egg trigger #3: click the headshot
+  document.addEventListener("DOMContentLoaded", () => {
+    const headshot = document.getElementById("headshot");
+    if (!headshot) return;
+    headshot.addEventListener("mouseenter", () => {
+      headshot.style.transform = "scale(1.03) rotate(-1deg)";
+      headshot.style.boxShadow = "0 28px 70px -18px rgba(255,90,61,.45)";
+    });
+    headshot.addEventListener("mouseleave", () => {
+      headshot.style.transform = "none";
+      headshot.style.boxShadow = "0 24px 60px -20px rgba(0,0,0,.6)";
+    });
+    headshot.addEventListener("click", () => {
+      window.location.href = "secret.html";
+    });
+  });
+</script>
+</body>
+</html>
