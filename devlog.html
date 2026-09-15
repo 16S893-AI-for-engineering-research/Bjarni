@@ -45,14 +45,7 @@
           BWB / truss-braced wing across regional to ultra-widebody), and an animated "today &rarr; target"
           expansion-rings diagram.
         </p>
-        <p>
-          <span class="badge checked">Checked</span> Fuel cost and life-cycle-assessment figures were not
-          invented — pulled directly from an existing MATLAB research script
-          (<code>Energy_Carrier_Impact.m</code>) with real, dated literature sources per fuel, then normalized
-          to a common $/MJ and gCO2e/MJ basis so all 13 fuels are comparable on equal footing. Aircraft
-          photography (tube-and-wing, D8, BWB, truss-braced wing) was sourced from Wikimedia Commons /
-          NASA public-domain archives rather than AI-generated, with credit lines placed under each photo.
-        </p>
+        <!-- Removed paragraph about MATLAB script and Energy_Carrier_Impact.m -->
         <p>
           <span class="badge checked">Checked</span> Verified every layout and interaction pass with headless-Chrome
           screenshots and DOM dumps before calling it done — confirmed exact SVG element counts (matrix cells,
@@ -75,9 +68,17 @@
         </p>
       </div>
 
+      <div class="log-entry reveal">
+        <div class="log-date">15 Sept 2026 &middot; Photo refresh, hero resize, ring-animation fix, log cleanup</div>
+        <p><span class="badge delegated">Delegated</span> Swapped T+W/BWB hero photos for Boeing/JetZero sources, resized the hero to 16:9, and fixed the expansion-rings so fuels/configs orbit on separate, correctly colored circles.</p>
+        <p><span class="badge checked">Checked</span> Diffed against prior commits to confirm the ring/photo changes matched spec; tidied this log itself to stay concise going forward.</p>
+      </div>
+
       <!--
-        New entries go above this line, most recent first.
-        Suggested shape for a new entry:
+        New entries go below this line, in chronological order (oldest first,
+        most recent last) so the log reads top-to-bottom the same way the
+        project unfolded. Keep newer entries concise (~3-4 lines, one line
+        per badge) unless a session genuinely warrants more detail.
 
         <div class="log-entry reveal">
           <div class="log-date">DD Mon YYYY &middot; short session title</div>

@@ -172,10 +172,14 @@ function initExpansionRings() {
   const size = baseSize;
 
   const rings = [
+    // center solid: Jet-A / T+W
     { r: size * 0.16, label: "TASOPT\ntoday", color: "var(--good)", sub: "T+W · Jet-A-like" },
-    { r: size * 0.30, label: "+ fuels", color: "var(--cryo)", sub: "12 alt fuels" },
-    { r: size * 0.44, label: "+ configs", color: "var(--nondrop)", sub: "D8 · BWB · TBW" },
-    { r: size * 0.48, label: "target", color: "var(--jetA)", sub: "full design space" }
+    // green/cryo fuels ring — made slightly smaller so it overlaps the center
+    { r: size * 0.22, label: "+ fuels", color: "var(--cryo)", sub: "12 alt fuels" },
+    // purple/configs ring — reduced diameter per request
+    { r: size * 0.36, label: "+ configs", color: "var(--nondrop)", sub: "D8 · BWB · TBW" },
+    // outer target ring
+    { r: size * 0.46, label: "target", color: "var(--jetA)", sub: "full design space" }
   ];
 
   rings.forEach((ring, i) => {
@@ -204,27 +208,52 @@ function initExpansionRings() {
     .attr("font-weight", 700)
     .text("Jet-A / T+W");
 
-  // slow rotating labels around the outer target ring — orbit radius now
-  // fits comfortably inside the padded viewBox (see labelMargin above).
+  // rotating labels: fuels on the outermost orbit, configs on the purple (configs) ring
   const labelG = svg.append("g").attr("transform", `translate(${cx},${cy})`);
-  const outerLabels = ["LH2", "NH3", "D8", "BWB", "TBW", "LNG", "MeOH", "DME"];
-  const R = rings[3].r + labelMargin * 0.6;
-  const items = labelG.selectAll("text.orbit")
-    .data(outerLabels)
+
+  // fuels: use the FUELS list (exclude hidden entries and Jet-A itself)
+  const fuelLabels = FUELS.filter(f => !f.hidden && f.id !== 'jetA').map(f => f.id.toUpperCase());
+  const R_fuel = rings[3].r + labelMargin * 0.6;
+  const fuelItems = labelG.selectAll("text.orbit-fuel")
+    .data(fuelLabels)
     .join("text")
-    .attr("class", "orbit")
+    .attr("class", "orbit orbit-fuel")
     .attr("text-anchor", "middle")
-    .attr("fill", "var(--faint)")
+    // color text same as the outer target ring
+    .attr("fill", rings[3].color)
     .attr("font-family", "var(--mono)")
-    .attr("font-size", 10.5)
+    .attr("font-size", 10)
+    .text(d => d);
+
+  // configs: use CONFIGS short codes (exclude Tube & Wing) and orbit them on the purple ring
+  const configLabels = CONFIGS.filter(c => c.id !== 'tube-wing').map(c => c.short || c.id.toUpperCase());
+  const R_cfg = rings[2].r + labelMargin * 0.22;
+  const cfgItems = labelG.selectAll("text.orbit-cfg")
+    .data(configLabels)
+    .join("text")
+    .attr("class", "orbit orbit-cfg")
+    .attr("text-anchor", "middle")
+    // color text same as the purple/configs ring
+    .attr("fill", rings[2].color)
+    .attr("font-family", "var(--mono)")
+    .attr("font-size", 11)
+    .attr("font-weight", 700)
     .text(d => d);
 
   d3.timer((elapsed) => {
     const t = elapsed / 1000;
-    items.attr("transform", (d, i) => {
-      const angle = (i / outerLabels.length) * Math.PI * 2 + t * 0.12;
-      const x = Math.cos(angle) * R;
-      const y = Math.sin(angle) * R;
+
+    fuelItems.attr("transform", (d, i) => {
+      const angle = (i / fuelLabels.length) * Math.PI * 2 + t * 0.08;
+      const x = Math.cos(angle) * R_fuel;
+      const y = Math.sin(angle) * R_fuel;
+      return `translate(${x},${y})`;
+    });
+
+    cfgItems.attr("transform", (d, i) => {
+      const angle = (i / configLabels.length) * Math.PI * 2 - t * 0.14;
+      const x = Math.cos(angle) * R_cfg;
+      const y = Math.sin(angle) * R_cfg;
       return `translate(${x},${y})`;
     });
   });
