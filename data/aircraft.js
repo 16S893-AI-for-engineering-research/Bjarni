@@ -12,7 +12,7 @@ const CONFIGS = [
     todaySupport: "full",
     silhouette: "tubeWing",
     photo: "assets/aircraft/tube-wing.jpg",
-    photoCredit: "Airbus A350 — photo: Gyrostat / Wikimedia Commons, CC BY-SA 3.0",
+    photoCredit: "Boeing 777X gallery image — photo: Boeing",
     companies: ["Airbus (A320/A350 families)", "Boeing (737/787 families)"]
   },
   {
@@ -34,7 +34,7 @@ const CONFIGS = [
     todaySupport: "none",
     silhouette: "bwb",
     photo: "assets/aircraft/bwb.jpg",
-    photoCredit: "NASA X-48B blended wing body demonstrator — photo: NASA/Carla Thomas (public domain)",
+    photoCredit: "JetZero blended wing image — photo: JetZero",
     companies: ["JetZero", "NASA / Boeing (X-48 research)"]
   },
   {

@@ -172,7 +172,7 @@ p.lead{ font-size:clamp(15px,1.6vw,19px); color:var(--muted); max-width:60ch; }
 }
 
 /* ---------- parallax layers (home hero) ---------- */
-.parallax-stage{ position:relative; height: 78vh; min-height:520px; overflow:hidden; border-radius:22px; border:1px solid var(--card-bd); background:#05070b; }
+.parallax-stage{ position:relative; /* use a widescreen aspect ratio for the hero (16:9 by default) */ aspect-ratio: 16 / 9; width:100%; max-width:100%; height:auto; min-height:360px; overflow:hidden; border-radius:22px; border:1px solid var(--card-bd); background:#05070b; } /* If you prefer an even wider look, change to 21/9 above. */
 .parallax-layer{ position:absolute; inset:0; will-change: transform; }
 
 /* ---------- hero photo cross-fade ---------- */

@@ -36,6 +36,14 @@ function initHero() {
     const div = document.createElement("div");
     div.className = "hero-photo" + (i === 0 ? " active" : "");
     div.style.backgroundImage = `url("${cfg.photo}")`;
+    // Slightly different sizing for the tube-and-wing and truss-braced-wing
+    // photos so the whole aircraft reads better inside the animated hero box.
+    if (cfg.id === "tube-wing" || cfg.id === "tbw") {
+      div.style.backgroundSize = "contain";
+      div.style.backgroundRepeat = "no-repeat";
+      div.style.backgroundPosition = "center";
+      div.style.backgroundColor = "#05070b";
+    }
     photoLayer.appendChild(div);
     return div;
   });
@@ -52,10 +60,12 @@ function initHero() {
         caption.style.opacity = 1;
       }, 350);
     }
+    // suppress the photo credit in the animated hero — credits are shown
+    // with each preview card lower on the page instead.
     if (creditEl) {
       creditEl.style.opacity = 0;
       setTimeout(() => {
-        creditEl.textContent = cfg.photoCredit || "";
+        creditEl.textContent = "";
         creditEl.style.opacity = 1;
       }, 350);
     }
