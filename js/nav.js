@@ -38,8 +38,8 @@
     const footer = document.createElement("footer");
     footer.innerHTML = `
       <div class="wrap">
-        <span>Built by Bjarni &middot; LAE &middot; class project, D3.js &middot; ${year} <span id="egg-dot" class="egg-hint" title=""></span></span>
-        <span class="small">↑ / ↓ / ← / → / ↑ / ↓ ... just saying</span>
+        <span>Built by Bjarni &middot; LAE &middot; class project, D3.js &middot; ${year}</span>
+        <span class="small">↑ / ↓ / ← / → / ↑ / ↓ <span id="egg-dot" class="egg-hint" title="you didn&rsquo;t see this">&#x22EF;</span></span>
       </div>
     `;
     document.body.appendChild(footer);
@@ -74,61 +74,90 @@
     try { localStorage.setItem("tasopt_egg_found", "1"); } catch (e) {}
   }
 
-  // ---- Konami code listener: ↑ ↑ ↓ ↓ ← → ← → ----
-  // Cross-browser hardened: Safari (especially older desktop/iOS builds) can be
-  // inconsistent about `key` naming and about delivering keydown events to a
-  // page that hasn't been explicitly focused yet. We normalize against both
-  // `key` and the legacy `keyCode`, and force focus onto the document body on
-  // load / first interaction so arrow keys are never swallowed by the chrome
-  // (address bar, etc.) instead of reaching our listener.
+  // ---- Konami code listener: ↑ ↑ ↓ ↓ ← → ← → B A ----
+  // Cross-browser fix notes:
+  //   • Attach to document ONLY (not both window + document — that caused every
+  //     keypress to run handleKey twice, making the sequence impossible to complete).
+  //   • capture:true so SVG/D3 elements that call stopPropagation can't swallow keys.
+  //   • Normalize via e.key first, fall back to legacy e.keyCode / e.which for older
+  //     Safari builds that didn't always expose named arrow-key strings.
+  //   • Give <body> a tabindex so Safari delivers keydown without needing a user click,
+  //     and re-focus on every click so focus is never trapped in the address bar.
+  //   • Non-sequence keys (letters, numbers, etc.) no longer reset pos to 0 — only
+  //     a wrong arrow key resets, so accidental keypresses between arrows are forgiven.
   function initKonami() {
-    const seq = ["ArrowUp", "ArrowUp", "ArrowDown", "ArrowDown", "ArrowLeft", "ArrowRight", "ArrowLeft", "ArrowRight"];
+    const seq = [
+      "ArrowUp", "ArrowUp", "ArrowDown", "ArrowDown",
+      "ArrowLeft", "ArrowRight", "ArrowLeft", "ArrowRight",
+      "b", "a"
+    ];
+    // legacy keyCode map (Safari < 10.1, some older Chrome)
     const keyCodeMap = { 38: "ArrowUp", 40: "ArrowDown", 37: "ArrowLeft", 39: "ArrowRight" };
+    // set of keys that are part of the sequence (used to decide when to reset)
+    const seqSet = new Set(seq);
     let pos = 0;
 
     function normalizeKey(e) {
-      if (seq.includes(e.key)) return e.key;
+      // e.key is reliable in all modern browsers; fall back for legacy builds
+      if (e.key && seqSet.has(e.key)) return e.key;
+      if (e.key && seqSet.has(e.key.toLowerCase())) return e.key.toLowerCase();
       if (keyCodeMap[e.keyCode]) return keyCodeMap[e.keyCode];
-      if (keyCodeMap[e.which]) return keyCodeMap[e.which];
-      return null;
+      if (keyCodeMap[e.which])   return keyCodeMap[e.which];
+      return null;   // not a sequence key — ignore without resetting
     }
 
     function handleKey(e) {
       const key = normalizeKey(e);
-      if (!key) { pos = 0; return; }
-      const expected = seq[pos];
-      if (key === expected) {
+      if (key === null) return;           // irrelevant key — don't reset progress
+      if (key === seq[pos]) {
         pos++;
         if (pos === seq.length) { pos = 0; openEgg(); }
       } else {
+        // wrong key — restart, but check if it matches the very first step
         pos = (key === seq[0]) ? 1 : 0;
       }
     }
 
-    // capture:true so we see the event even if some other element (svg, iframe-ish
-    // widget, etc.) stops propagation first — helps with Safari focus quirks.
-    window.addEventListener("keydown", handleKey, { capture: true });
+    // Single listener on document with capture so D3 SVG elements can't block it.
     document.addEventListener("keydown", handleKey, { capture: true });
 
-    // make sure the document can actually receive key events on load
+    // Give <body> a tabindex so Safari delivers keydown events without requiring
+    // the user to first click an interactive element.
     if (!document.body.hasAttribute("tabindex")) {
       document.body.setAttribute("tabindex", "-1");
       document.body.style.outline = "none";
     }
     document.body.focus({ preventScroll: true });
-    document.addEventListener("click", () => document.body.focus({ preventScroll: true }), { once: false });
+    // Re-focus body after any click so focus can never get trapped in the address bar.
+    document.addEventListener("click", () => document.body.focus({ preventScroll: true }));
   }
 
-  // ---- secret footer dot: click 3x fast ----
+  // ---- secret footer "⋯" dot: click 3× fast ----
+  // The three-dot ellipsis (⋯) at the end of the Konami hint in the footer
+  // is the hidden trigger. Visual feedback (glow pulse on each click) guides
+  // the user without giving the game away. A single click just makes it shimmer;
+  // three clicks within 900 ms opens the egg overlay.
   function initFooterEgg() {
     const dot = document.getElementById("egg-dot");
     if (!dot) return;
     let clicks = 0, timer = null;
-    dot.addEventListener("click", () => {
+
+    dot.addEventListener("click", (e) => {
+      e.stopPropagation(); // don't re-trigger the body-focus click listener
       clicks++;
       clearTimeout(timer);
-      timer = setTimeout(() => { clicks = 0; }, 800);
-      if (clicks >= 3) { clicks = 0; openEgg(); }
+      // animate a quick pulse for each click so the user knows it's interactive
+      dot.classList.remove("egg-hint-ping");
+      // force reflow so the animation restarts cleanly even on rapid clicks
+      void dot.offsetWidth;
+      dot.classList.add("egg-hint-ping");
+      if (clicks >= 3) {
+        clicks = 0;
+        clearTimeout(timer);
+        openEgg();
+      } else {
+        timer = setTimeout(() => { clicks = 0; }, 900);
+      }
     });
   }
 
