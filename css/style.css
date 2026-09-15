@@ -183,7 +183,23 @@ p.lead{ font-size:clamp(15px,1.6vw,19px); color:var(--muted); max-width:60ch; }
 .hero-photo.active{ opacity:1; }
 .hero-photo::after{
   content:""; position:absolute; inset:0;
-  background:linear-gradient(180deg, rgba(4,5,9,.25) 0%, rgba(4,5,9,.15) 45%, rgba(4,5,9,.85) 100%);
+  /* User spec:
+     - 100% brightness (no darkening) for the top 50%
+     - Gradually ramp to 25% overlay darkness between 50% and 75%
+     - From 75% to 100% ramp up to 75% overlay darkness at the very bottom
+     This preserves bright, vibrant tops while providing strong contrast
+     near the bottom for overlaid UI elements. */
+  background: linear-gradient(180deg,
+    rgba(4,5,9,0) 0%,
+    rgba(4,5,9,0) 50%,       /* fully transparent until halfway */
+    rgba(4,5,9,0.25) 75%,   /* reach ~25% darkness at 75% */
+    rgba(4,5,9,0.75) 100%   /* reach ~75% darkness at bottom */
+  );
+}
+
+/* Remove overlay just for the homepage hero-stage photos (index.html) */
+#hero-stage .hero-photo::after{
+  background: none !important;
 }
 
 /* ---------- airframe preview card photos ---------- */
