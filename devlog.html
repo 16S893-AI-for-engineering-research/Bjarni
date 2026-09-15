@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Dev Log — TASOPT+</title>
+<meta name="description" content="Session-by-session log of what was delegated to the AI agent, what was checked, and what was rejected." />
+<link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+<div class="bg"></div>
+<div class="grain"></div>
+<div class="vignette"></div>
+
+<main>
+
+  <section style="padding-bottom:10px;">
+    <div class="wrap">
+      <div class="eyebrow">session notes</div>
+      <h1>Dev <span class="grad-text">log.</span></h1>
+      <p class="lead mt-16">
+        A running record of building this site with an AI coding agent: what got delegated outright, what
+        got double-checked before shipping, and what got pushed back on or left open. Updated as the
+        semester progresses — one entry per work session.
+      </p>
+      <div class="flex gap-16 mt-24" style="flex-wrap:wrap;">
+        <span class="pill"><span class="badge delegated" style="margin:0;">delegated</span> agent did the work, reviewed lightly</span>
+        <span class="pill"><span class="badge checked" style="margin:0;">checked</span> verified against a real source or a live test</span>
+        <span class="pill"><span class="badge rejected" style="margin:0;">rejected / open</span> pushed back, corrected, or left unresolved</span>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+
+      <div class="log-entry reveal">
+        <div class="log-date">14 Sept 2026 &middot; Site scaffold, D3 visuals, easter eggs, GitHub Pages</div>
+        <p>
+          <span class="badge delegated">Delegated</span> Built the full four-page static site (<code>index</code>,
+          <code>project</code>, <code>about</code>, <code>secret</code>) end-to-end from a plain-language spec:
+          shared nav/footer injection, scroll-reveal animation, cursor-reactive parallax background, and D3.js
+          visuals — a fuel energy-density scatter plot, a config &times; size status matrix (tube-and-wing / D8 /
+          BWB / truss-braced wing across regional to ultra-widebody), and an animated "today &rarr; target"
+          expansion-rings diagram.
+        </p>
+        <p>
+          <span class="badge checked">Checked</span> Fuel cost and life-cycle-assessment figures were not
+          invented — pulled directly from an existing MATLAB research script
+          (<code>Energy_Carrier_Impact.m</code>) with real, dated literature sources per fuel, then normalized
+          to a common $/MJ and gCO2e/MJ basis so all 13 fuels are comparable on equal footing. Aircraft
+          photography (tube-and-wing, D8, BWB, truss-braced wing) was sourced from Wikimedia Commons /
+          NASA public-domain archives rather than AI-generated, with credit lines placed under each photo.
+        </p>
+        <p>
+          <span class="badge checked">Checked</span> Verified every layout and interaction pass with headless-Chrome
+          screenshots and DOM dumps before calling it done — confirmed exact SVG element counts (matrix cells,
+          scatter points, timeline entries), checked for zero console errors across all pages, and cross-browser
+          hardened the Konami-code listener (Safari's inconsistent <code>key</code>/<code>keyCode</code> handling)
+          after an initial report that it silently failed there.
+        </p>
+        <p>
+          <span class="badge rejected">Rejected / open</span> First pass at the Blended Wing Body and D8 hero
+          silhouettes didn't read clearly as aircraft — flagged and redrawn twice before landing on shapes that
+          were unambiguous at a glance. The relative tank mass/volume penalty chart was cut entirely on request
+          rather than kept as dead weight once it stopped adding to the story.
+        </p>
+        <p style="color:var(--muted); font-size:0.85rem;">
+          Verification path: headless-Chrome screenshots and DOM element counts after every visual change;
+          <code>node --check</code> on every JS file before commit; manual cross-reference of fuel cost/LCA
+          numbers against the source MATLAB script rather than trusting memory of typical values. Not yet
+          verified: no automated cross-browser test suite beyond manual Safari-focused Konami-code fixes;
+          no accessibility (screen reader) pass yet.
+        </p>
+      </div>
+
+      <!--
+        New entries go above this line, most recent first.
+        Suggested shape for a new entry:
+
+        <div class="log-entry reveal">
+          <div class="log-date">DD Mon YYYY &middot; short session title</div>
+          <p><span class="badge delegated">Delegated</span> ...</p>
+          <p><span class="badge checked">Checked</span> ...</p>
+          <p><span class="badge rejected">Rejected / open</span> ...</p>
+        </div>
+      -->
+
+    </div>
+  </section>
+
+</main>
+
+<script src="js/nav.js"></script>
+</body>
+</html>

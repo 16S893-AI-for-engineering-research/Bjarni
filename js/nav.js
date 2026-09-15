@@ -6,7 +6,8 @@
   const NAV_LINKS = [
     { href: "index.html", label: "Home" },
     { href: "project.html", label: "Project" },
-    { href: "about.html", label: "About Me" }
+    { href: "about.html", label: "About Me" },
+    { href: "devlog.html", label: "Dev Log" }
   ];
 
   function currentPage() {
