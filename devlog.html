@@ -6,6 +6,11 @@
 <title>Dev Log — TASOPT+</title>
 <meta name="description" content="Session-by-session log of what was delegated to the AI agent, what was checked, and what was rejected." />
 <link rel="stylesheet" href="css/style.css" />
+<style>
+  .log-entry .agent-col, .log-entry .notes-col { font-size: 1rem; }
+  /* Ensure My notes paragraphs override any inline smaller sizes */
+  .log-entry .notes-col p { font-size: 1rem !important; }
+</style>
 </head>
 <body>
 
@@ -35,43 +40,79 @@
   <section>
     <div class="wrap">
 
-      <div class="log-entry reveal">
-        <div class="log-date">14 Sept 2026 &middot; Site scaffold, D3 visuals, easter eggs, GitHub Pages</div>
-        <p>
-          <span class="badge delegated">Delegated</span> Built the full four-page static site (<code>index</code>,
-          <code>project</code>, <code>about</code>, <code>secret</code>) end-to-end from a plain-language spec:
-          shared nav/footer injection, scroll-reveal animation, cursor-reactive parallax background, and D3.js
-          visuals — a fuel energy-density scatter plot, a config &times; size status matrix (tube-and-wing / D8 /
-          BWB / truss-braced wing across regional to ultra-widebody), and an animated "today &rarr; target"
-          expansion-rings diagram.
-        </p>
-        <!-- Removed paragraph about MATLAB script and Energy_Carrier_Impact.m -->
-        <p>
-          <span class="badge checked">Checked</span> Verified every layout and interaction pass with headless-Chrome
-          screenshots and DOM dumps before calling it done — confirmed exact SVG element counts (matrix cells,
-          scatter points, timeline entries), checked for zero console errors across all pages, and cross-browser
-          hardened the Konami-code listener (Safari's inconsistent <code>key</code>/<code>keyCode</code> handling)
-          after an initial report that it silently failed there.
-        </p>
-        <p>
-          <span class="badge rejected">Rejected / open</span> First pass at the Blended Wing Body and D8 hero
-          silhouettes didn't read clearly as aircraft — flagged and redrawn twice before landing on shapes that
-          were unambiguous at a glance. The relative tank mass/volume penalty chart was cut entirely on request
-          rather than kept as dead weight once it stopped adding to the story.
-        </p>
-        <p style="color:var(--muted); font-size:0.85rem;">
-          Verification path: headless-Chrome screenshots and DOM element counts after every visual change;
-          <code>node --check</code> on every JS file before commit; manual cross-reference of fuel cost/LCA
-          numbers against the source MATLAB script rather than trusting memory of typical values. Not yet
-          verified: no automated cross-browser test suite beyond manual Safari-focused Konami-code fixes;
-          no accessibility (screen reader) pass yet.
-        </p>
+      <!-- Log ordering: entries start with oldest date and end with latest date -->
+
+      <div class="log-entry reveal" style="display:grid; grid-template-columns:1fr 1fr; gap:32px;">
+        <div class="agent-col">
+          <div class="log-section-label" style="font-weight:700; color:var(--muted); font-size:0.9rem; margin-bottom:6px;">Agent log</div>
+          <div class="log-date">14 Sept 2026 &middot; Site scaffold, D3 visuals, easter eggs, GitHub Pages</div>
+          <p>
+            <span class="badge delegated">Delegated</span> Built the full four-page static site (<code>index</code>,
+            <code>project</code>, <code>about</code>, <code>secret</code>) end-to-end from a plain-language spec:
+            shared nav/footer injection, scroll-reveal animation, cursor-reactive parallax background, and D3.js
+            visuals — a fuel energy-density scatter plot, a config &times; size status matrix (tube-and-wing / D8 /
+            BWB / truss-braced wing across regional to ultra-widebody), and an animated "today &rarr; target"
+            expansion-rings diagram.
+          </p>
+          <!-- Removed paragraph about MATLAB script and Energy_Carrier_Impact.m -->
+          <p>
+            <span class="badge checked">Checked</span> Verified every layout and interaction pass with headless-Chrome
+            screenshots and DOM dumps before calling it done — confirmed exact SVG element counts (matrix cells,
+            scatter points, timeline entries), checked for zero console errors across all pages, and cross-browser
+            hardened the Konami-code listener (Safari's inconsistent <code>key</code>/<code>keyCode</code> handling)
+            after an initial report that it silently failed there.
+          </p>
+          <p>
+            <span class="badge rejected">Rejected / open</span> First pass at the Blended Wing Body and D8 hero
+            silhouettes didn't read clearly as aircraft — flagged and redrawn twice before landing on shapes that
+            were unambiguous at a glance. The relative tank mass/volume penalty chart was cut entirely on request
+            rather than kept as dead weight once it stopped adding to the story.
+          </p>
+          <p style="color:var(--muted);">
+            Verification path: headless-Chrome screenshots and DOM element counts after every visual change;
+            <code>node --check</code> on every JS file before commit; manual cross-reference of fuel cost/LCA
+            numbers against the source MATLAB script rather than trusting memory of typical values. Not yet
+            verified: no automated cross-browser test suite beyond manual Safari-focused Konami-code fixes;
+            no accessibility (screen reader) pass yet.
+          </p>
+        </div>
+        <div class="notes-col">
+          <div class="log-section-label" style="font-weight:700; color:var(--muted); font-size:0.9rem; margin-bottom:6px;">My notes</div>
+          <p style="color:var(--muted);">Tasked Sonnet 5.0 to make the website. Gave it creative licence. Only request was to use D3. Prompted it with context of the project and the websites from the summer, hence the three tabs home, project and about me. Producing the first iteration took ~5 minutes and cost of the order of $1-$1.5. Several rounds of cleaning up D3 issues where text exceeded the boundary of the figure or interactive element. Ask the Agent to remove coffee references and the hidden 13th fuel option of Icelandic burnt vine - asked for magma instead. Was unable to get the Konami code to work and finding the hidden dot that enabled access to the secret website. It was comical to it try to draw different aircraft configurations with D3. Grabbing images from the web was an eaiser path forward. Since the easter egg wasn't functioning properly, I prompted it to hide it behind my photo - it proposed animating it as well. I was not happy that the agent pushed the website while I was asking it to guide me step by step (it argued it took the liberty as the repository was empty.")</p>
+        </div>
       </div>
 
-      <div class="log-entry reveal">
-        <div class="log-date">15 Sept 2026 &middot; Photo refresh, hero resize, ring-animation fix, log cleanup</div>
-        <p><span class="badge delegated">Delegated</span> Swapped T+W/BWB hero photos for Boeing/JetZero sources, resized the hero to 16:9, and fixed the expansion-rings so fuels/configs orbit on separate, correctly colored circles.</p>
-        <p><span class="badge checked">Checked</span> Diffed against prior commits to confirm the ring/photo changes matched spec; tidied this log itself to stay concise going forward.</p>
+
+      <div class="log-entry reveal" style="display:grid; grid-template-columns:1fr 1fr; gap:32px;">
+        <div class="agent-col">
+          <div class="log-section-label" style="font-weight:700; color:var(--muted); font-size:0.9rem; margin-bottom:6px;">Agent log</div>
+          <div class="log-date">15 Sept 2026 &middot; Photo refresh, hero resize, ring-animation fix, log cleanup</div>
+          <p><span class="badge delegated">Delegated</span> Swapped T+W/BWB hero photos for Boeing/JetZero sources, resized the hero to 16:9, and fixed the expansion-rings so fuels/configs orbit on separate, correctly colored circles.</p>
+          <p><span class="badge checked">Checked</span> Diffed against prior commits to confirm the ring/photo changes matched spec; tidied this log itself to stay concise going forward.</p>
+        </div>
+        <div class="notes-col">
+          <div class="log-section-label" style="font-weight:700; color:var(--muted); font-size:0.9rem; margin-bottom:6px;">My notes</div>
+          <p style="color:var(--muted);">Added a dev log page. After several iterations found the issue behind the Konami code and hidden link. The agent had used the full 10 letter Konami code but only given me the first 8 letters. The hidden link was 1 pixel large and required three clicks... oh dear.</p>
+          <p style="color:var(--muted);">I like its idea of having a dossier for the 13th fuel option - cool. Kept on refining small things on the website: some color mismatches, sizes of elements/interactions. Asked it to change the approach for some animations as it didn't correctly capture architectural abstractions of the project.</p>
+          <p style="color:var(--muted);">What I learned is that running a highly capable model is great for building a whole website in the first go. Then using lower cost and faster agents to do the modifications within a new interactive session is much more effective.</p>
+        </div>
+      </div>
+
+      <div class="log-entry reveal" style="display:grid; grid-template-columns:1fr 1fr; gap:32px;">
+        <div class="agent-col">
+          <div class="log-section-label" style="font-weight:700; color:var(--muted); font-size:0.9rem; margin-bottom:6px;">Agent log</div>
+          <p>&nbsp;</p>
+        </div>
+        <div class="notes-col">
+          <div class="log-section-label" style="font-weight:700; color:var(--muted); font-size:0.9rem; margin-bottom:6px;">My notes</div>
+          <div class="log-date">17 Sept 2026 &middot; Quired GhatGPT website to make me a skill file and guide me step by step to build everything via the terminal</div>
+          <p style="color:var(--muted);">Quired GhatGPT website to make me a skill file and guide me step by step to build everything via the terminal. First attempt to run GPT-5 Nano with the Matlab plot skill didn't work as expected. It found it after I asked why it didn't use it. May need to put in more work to get it work straight from the get go.</p>
+          <p style="color:var(--muted);">User made 14 messages according to the .jsonl file while the agent/s recorded.</p>
+          <pre style="color:var(--muted);">107 message
+   5 model_change
+   1 session
+  11 thinking_level_change</pre>
+        </div>
       </div>
 
       <!--
