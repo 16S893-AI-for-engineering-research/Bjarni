@@ -1,228 +1,390 @@
 // data/fuels.js
-// Reference + 12 alternative fuels under consideration for expanding TASOPT's
-// fuel-aircraft co-design space.
+// Energy carriers database: Fossil-derived and renewable variants
 //
-// Energy density figures: standard literature LHV values.
-// Cost & LCA figures are pulled from Bjarni's own downselection dataset
-// (Energy_Carrier_Impact.m, LAE / MIT, 2026 pricing snapshots) where available,
-// normalized to $/MJ and gCO2e/MJ so every fuel is compared on equal footing.
-// Fuels not in that dataset (NH3, LOHC, SAF sub-types, e-kerosene) use
-// order-of-magnitude literature estimates — good enough for this class site,
-// not citation-grade.
+// Reference values:
+// - Jet-A: 43 MJ/kg, 0.8 kg/L → 34.4 MJ/L
+//
+// Cost conversion: $/MJ = Market_Price_per_kg / Specific_Energy_MJ_per_kg
+// LCA: All in gCO2eq/MJ (well-to-wake)
 
 const FUELS = [
+  // ─────────────────────── JET-A & SAF ───────────────────────
   {
     id: "jetA",
     name: "Jet-A",
-    tag: "REFERENCE",
-    category: "drop-in",
-    state: "liquid, ambient",
-    lhv_gravimetric: 43.0,   // MJ/kg
-    lhv_volumetric: 34.4,    // MJ/L (0.8 kg/L)
-    storageC: 15,
-    tankPenalty: 1.0,
-    costPerMJ: 0.0145,       // ~$14.5/GJ — $0.50/L @ 0.8 kg/L, 43 MJ/kg
-    lcaPerMJ: 89,            // gCO2e/MJ — well-to-wake, fossil baseline
-    challenge: "Baseline. TASOPT already models this well.",
-    color: "#e8b04b"
+    variant: "fossil",
+    type: "alkane",
+    derivedFrom: null,
+    lhv_gravimetric: 43.0,
+    lhv_volumetric: 34.4,
+    costPerMJ: 0.014535,  // $0.5/L ÷ 34.4 MJ/L
+    lcaPerMJ: 89,
+    market_size_ej: 12,
+    market_size_mmt: null,
+    color: "#5c7cfa",
+    tag: "Alkane (fossil)"
   },
   {
-    id: "hefa",
-    name: "SAF – HEFA",
-    tag: "drop-in SAF",
-    category: "drop-in",
-    state: "liquid, ambient",
-    lhv_gravimetric: 44.0,
-    lhv_volumetric: 34.0,
-    storageC: 15,
-    tankPenalty: 1.0,
-    costPerMJ: 0.0497,       // ~$49.7/GJ — SAF avg market price, LAE dataset
-    lcaPerMJ: 17.8,          // ~80% reduction vs Jet-A (IATA)
-    challenge: "Near-identical properties to Jet-A; feedstock-limited supply.",
-    color: "#f2c879"
+    id: "saf",
+    name: "SAF (Blended)",
+    variant: "green",
+    type: "alkane",
+    derivedFrom: null,
+    lhv_gravimetric: 43.0,
+    lhv_volumetric: 34.4,
+    costPerMJ: 0.049709,  // $1.71/L ÷ 34.4 MJ/L
+    lcaPerMJ: 17.8,
+    market_size_ej: 0.036,
+    market_size_mmt: null,
+    color: "#51cf66",
+    tag: "Alkane (renewable, SAF)"
+  },
+
+  // ─────────────────────── METHANE ───────────────────────
+  {
+    id: "methane_fossil",
+    name: "Methane",
+    variant: "fossil",
+    type: "alkane",
+    derivedFrom: null,
+    lhv_gravimetric: 50.0,
+    lhv_volumetric: 21.15,
+    costPerMJ: 0.006316,  // $0.31581/kg ÷ 50 MJ/kg
+    lcaPerMJ: 74,
+    market_size_ej: 152.15,
+    market_size_mmt: 3043,
+    color: "#5c7cfa",
+    tag: "Alkane (fossil)"
   },
   {
-    id: "ft",
-    name: "SAF – Fischer–Tropsch",
-    tag: "drop-in SAF",
-    category: "drop-in",
-    state: "liquid, ambient",
-    lhv_gravimetric: 44.2,
-    lhv_volumetric: 33.5,
-    storageC: 15,
-    tankPenalty: 1.0,
-    costPerMJ: 0.052,
-    lcaPerMJ: 20,
-    challenge: "Slightly lower aromatics; seal-swell / density trade-offs.",
-    color: "#f2c879"
+    id: "methane_green",
+    name: "Methane",
+    variant: "green",
+    type: "alkane",
+    derivedFrom: null,
+    lhv_gravimetric: 50.0,
+    lhv_volumetric: 21.15,
+    costPerMJ: 0.020000,  // $1.00/kg ÷ 50 MJ/kg
+    lcaPerMJ: 19.6,
+    market_size_ej: 1.35,
+    market_size_mmt: 27,
+    color: "#51cf66",
+    tag: "Alkane (renewable)"
+  },
+
+  // ─────────────────────── ETHANE ───────────────────────
+  // Green ethane derived from ethanol
+  {
+    id: "ethane_fossil",
+    name: "Ethane",
+    variant: "fossil",
+    type: "alkane",
+    derivedFrom: null,
+    lhv_gravimetric: 47.5,
+    lhv_volumetric: 25.84,
+    costPerMJ: 0.005245,  // $0.24915/kg ÷ 47.5 MJ/kg
+    lcaPerMJ: 94.103,
+    market_size_ej: 16.753,
+    market_size_mmt: 352.69,
+    color: "#5c7cfa",
+    tag: "Alkane (fossil)"
   },
   {
-    id: "atj",
-    name: "SAF – Alcohol-to-Jet",
-    tag: "drop-in SAF",
-    category: "drop-in",
-    state: "liquid, ambient",
-    lhv_gravimetric: 43.8,
-    lhv_volumetric: 33.9,
-    storageC: 15,
-    tankPenalty: 1.0,
-    costPerMJ: 0.048,
-    lcaPerMJ: 24,
-    challenge: "Feedstock-flexible (ethanol/isobutanol) but conversion losses.",
-    color: "#f2c879"
+    id: "ethane_green",
+    name: "Ethane",
+    variant: "green",
+    type: "alkane",
+    derivedFrom: "ethanol",
+    lhv_gravimetric: 47.5,
+    lhv_volumetric: 25.84,
+    costPerMJ: 0.026518,  // $1.2596/kg ÷ 47.5 MJ/kg
+    lcaPerMJ: 54.414,
+    market_size_ej: 2.8988,
+    market_size_mmt: 61.028,
+    color: "#51cf66",
+    tag: "Alkane (renewable, ex-ethanol)"
+  },
+
+  // ─────────────────────── ETHYLENE ───────────────────────
+  // Green ethylene derived from ethanol
+  {
+    id: "ethylene_fossil",
+    name: "Ethylene",
+    variant: "fossil",
+    type: "alkene",
+    derivedFrom: null,
+    lhv_gravimetric: 47.16,
+    lhv_volumetric: 26.881,
+    costPerMJ: 0.022000,  // $1.0375/kg ÷ 47.16 MJ/kg
+    lcaPerMJ: 94.944,
+    market_size_ej: 15.516,
+    market_size_mmt: 329,
+    color: "#5c7cfa",
+    tag: "Alkene (fossil)"
   },
   {
-    id: "ptl",
-    name: "e-Kerosene (PtL)",
-    tag: "drop-in SAF",
-    category: "drop-in",
-    state: "liquid, ambient",
-    lhv_gravimetric: 44.0,
-    lhv_volumetric: 34.5,
-    storageC: 15,
-    tankPenalty: 1.0,
-    costPerMJ: 0.085,        // synthetic e-fuels remain the most expensive SAF pathway
-    lcaPerMJ: 12,
-    challenge: "Energy-intensive synthesis (DAC + electrolysis); cost >> Jet-A.",
-    color: "#f2c879"
+    id: "ethylene_green",
+    name: "Ethylene",
+    variant: "green",
+    type: "alkene",
+    derivedFrom: "ethanol",
+    lhv_gravimetric: 47.16,
+    lhv_volumetric: 26.881,
+    costPerMJ: 0.022445,  // $1.0585/kg ÷ 47.16 MJ/kg
+    lcaPerMJ: 48.013,
+    market_size_ej: 2.6852,
+    market_size_mmt: 56.937,
+    color: "#51cf66",
+    tag: "Alkene (renewable, ex-ethanol)"
   },
+
+  // ─────────────────────── HYDROGEN ───────────────────────
+  // Blue = fossil-derived (steam methane reforming), Green = renewable (electrolysis)
   {
-    id: "lh2",
-    name: "Liquid Hydrogen",
-    tag: "cryogenic",
-    category: "cryogenic",
-    state: "liquid, −253°C",
+    id: "hydrogen_blue",
+    name: "Hydrogen",
+    variant: "fossil",
+    type: "element",
+    derivedFrom: null,
     lhv_gravimetric: 120.0,
     lhv_volumetric: 8.5,
-    storageC: -253,
-    tankPenalty: 4.2,
-    costPerMJ: 0.0191,       // $19/GJ — global average LH2 market price, LAE dataset
-    lcaPerMJ: 96.7,          // current tech mostly SMR-based → higher than Jet-A!
-    challenge: "3x energy/kg but 4x volume/kg — insulated cryo tanks reshape the whole airframe.",
-    color: "#5fd2c2"
+    costPerMJ: 0.026921,  // $3.2305/kg ÷ 120 MJ/kg
+    lcaPerMJ: 139.03,
+    market_size_ej: 12,
+    market_size_mmt: 100,
+    color: "#5c7cfa",
+    tag: "Blue Hydrogen (fossil-derived)"
   },
   {
-    id: "lch4",
-    name: "Liquid Methane (LNG)",
-    tag: "cryogenic",
-    category: "cryogenic",
-    state: "liquid, −162°C",
-    lhv_gravimetric: 50.0,
-    lhv_volumetric: 21.2,
-    storageC: -162,
-    tankPenalty: 2.1,
-    costPerMJ: 0.0063,       // $6.3/GJ — US long-term average, LAE dataset
-    lcaPerMJ: 74,
-    challenge: "Cryo tankage less extreme than LH2, still needs insulation & boil-off mgmt.",
-    color: "#7fd8e0"
+    id: "hydrogen_green",
+    name: "Hydrogen",
+    variant: "green",
+    type: "element",
+    derivedFrom: null,
+    lhv_gravimetric: 120.0,
+    lhv_volumetric: 8.5,
+    costPerMJ: 0.050564,  // $6.0677/kg ÷ 120 MJ/kg
+    lcaPerMJ: 17.5,
+    market_size_ej: 0.12,
+    market_size_mmt: 1,
+    color: "#51cf66",
+    tag: "Green Hydrogen (renewable)"
+  },
+
+  // ─────────────────────── BUTANE ───────────────────────
+  // Green butane derived from ethanol
+  {
+    id: "butane_fossil",
+    name: "Butane",
+    variant: "fossil",
+    type: "alkane",
+    derivedFrom: null,
+    lhv_gravimetric: 45.75,
+    lhv_volumetric: 27.45,
+    costPerMJ: 0.014863,  // $0.68/kg ÷ 45.75 MJ/kg
+    lcaPerMJ: 99.97,
+    market_size_ej: 9.0128,
+    market_size_mmt: 197,
+    color: "#5c7cfa",
+    tag: "Alkane (fossil)"
   },
   {
-    id: "nh3",
-    name: "Ammonia",
-    tag: "non-drop-in",
-    category: "non-drop-in liquid",
-    state: "liquid, −33°C or pressurized",
-    lhv_gravimetric: 18.6,
-    lhv_volumetric: 11.5,
-    storageC: -33,
-    tankPenalty: 1.8,
-    costPerMJ: 0.014,        // fertilizer-grade NH3 is cheap per kg, ~$0.25-0.40/kg
-    lcaPerMJ: 121,           // Haber-Bosch is fossil-gas-intensive today (grey NH3)
-    challenge: "Toxicity, low flame speed, big tanks — combustor & safety case are hard.",
-    color: "#8ea0e8"
+    id: "butane_green",
+    name: "Butane",
+    variant: "green",
+    type: "alkane",
+    derivedFrom: "ethanol",
+    lhv_gravimetric: 45.75,
+    lhv_volumetric: 27.45,
+    costPerMJ: 0.041834,  // $1.9139/kg ÷ 45.75 MJ/kg
+    lcaPerMJ: 39.342,
+    market_size_ej: 0.0060987,
+    market_size_mmt: 0.13331,
+    color: "#51cf66",
+    tag: "Alkane (renewable, ex-ethanol)"
   },
+
+  // ─────────────────────── METHANOL ───────────────────────
+  // Fossil-derived only (from natural gas)
   {
-    id: "meoh",
+    id: "methanol_fossil",
     name: "Methanol",
-    tag: "non-drop-in",
-    category: "non-drop-in liquid",
-    state: "liquid, ambient",
-    lhv_gravimetric: 19.9,
-    lhv_volumetric: 15.8,
-    storageC: 15,
-    tankPenalty: 1.3,
-    costPerMJ: 0.0302,       // $30.2/GJ — global avg, LAE dataset (imarcgroup, 2026)
-    lcaPerMJ: 122,           // via natural gas — fossil pathway
-    challenge: "Handles like a liquid, but ~half the energy density of Jet-A by mass.",
-    color: "#b98ee8"
+    variant: "fossil",
+    type: "alcohol",
+    derivedFrom: null,
+    lhv_gravimetric: 19.93,
+    lhv_volumetric: 15.785,
+    costPerMJ: 0.030105,  // $0.6/kg ÷ 19.93 MJ/kg
+    lcaPerMJ: 122,
+    market_size_ej: 3.5874,
+    market_size_mmt: 180,
+    color: "#5c7cfa",
+    tag: "Alcohol (fossil)"
   },
   {
-    id: "etoh",
+    id: "methanol_green",
+    name: "Methanol",
+    variant: "green",
+    type: "alcohol",
+    derivedFrom: null,
+    lhv_gravimetric: 19.93,
+    lhv_volumetric: 15.785,
+    costPerMJ: 0.050176,  // $1.0/kg ÷ 19.93 MJ/kg
+    lcaPerMJ: 19,
+    market_size_ej: 0.009965,
+    market_size_mmt: 0.5,
+    color: "#51cf66",
+    tag: "Alcohol (renewable)"
+  },
+
+  // ─────────────────────── ETHANOL ───────────────────────
+  // Renewable ONLY (no significant fossil pathway for this application)
+  {
+    id: "ethanol_green",
     name: "Ethanol",
-    tag: "non-drop-in",
-    category: "non-drop-in liquid",
-    state: "liquid, ambient",
+    variant: "green",
+    type: "alcohol",
+    derivedFrom: null,
     lhv_gravimetric: 26.8,
     lhv_volumetric: 21.2,
-    storageC: 15,
-    tankPenalty: 1.2,
-    costPerMJ: 0.0241,       // $24.1/GJ — tradingeconomics.com, LAE dataset
-    lcaPerMJ: 55.5,          // corn ethanol average
-    challenge: "Better than methanol, still well below Jet-A; corrosion considerations.",
-    color: "#c98ee8"
+    costPerMJ: 0.024052,  // $0.6446/kg ÷ 26.8 MJ/kg
+    lcaPerMJ: 55.5,
+    market_size_ej: 2.5058,
+    market_size_mmt: 93.5,
+    color: "#51cf66",
+    tag: "Alcohol (renewable)"
   },
+
+  // ─────────────────────── DME (DIMETHYL ETHER) ───────────────────────
   {
-    id: "btoh",
-    name: "Butanol",
-    tag: "non-drop-in",
-    category: "non-drop-in liquid",
-    state: "liquid, ambient",
-    lhv_gravimetric: 33.1,
-    lhv_volumetric: 26.9,
-    storageC: 15,
-    tankPenalty: 1.1,
-    costPerMJ: 0.0272,       // $27.2/GJ — LAE dataset (businessanalytiq, 2026)
-    lcaPerMJ: 74.0,          // petrochemical feedstock pathway
-    challenge: "Closest alcohol analogue to Jet-A energy density; blending candidate.",
-    color: "#d98aa8"
-  },
-  {
-    id: "dme",
+    id: "dme_fossil",
     name: "DME",
-    tag: "non-drop-in",
-    category: "pressurized liquid",
-    state: "liquid, pressurized (~5 atm)",
+    variant: "fossil",
+    type: "ether",
+    derivedFrom: null,
     lhv_gravimetric: 28.9,
-    lhv_volumetric: 19.3,
-    storageC: 20,
-    tankPenalty: 1.5,
-    costPerMJ: 0.0289,       // derived from methanol price, LAE dataset
-    lcaPerMJ: 169.7,         // derived from methanol LCA — worst-in-class here
-    challenge: "LPG-like handling; pressurized tankage adds mass & complexity.",
-    color: "#e88e6a"
+    lhv_volumetric: 21.241,
+    costPerMJ: 0.028880,  // $0.83463/kg ÷ 28.9 MJ/kg
+    lcaPerMJ: 169.71,
+    market_size_ej: 0.2601,
+    market_size_mmt: 9,
+    color: "#5c7cfa",
+    tag: "Ether (fossil)"
   },
   {
-    id: "lohc",
-    name: "LOHC (H2 carrier)",
-    tag: "non-drop-in",
-    category: "hydrogen-carrier",
-    state: "liquid, ambient (carries H2)",
-    lhv_gravimetric: 7.4,   // effective — H18-DBT class carriers hold ~6.2 wt% H2
-    lhv_volumetric: 6.7,
-    storageC: 15,
-    tankPenalty: 1.4,
-    costPerMJ: 0.09,         // carrier round-trip + dehydrogenation energy makes this pricey per usable MJ
-    lcaPerMJ: 55,
-    challenge: "Ambient-liquid H2 delivery, but only ~6 wt% is actually hydrogen — most of the mass is dead carrier weight.",
-    color: "#9ad1a0"
+    id: "dme_green",
+    name: "DME",
+    variant: "green",
+    type: "ether",
+    derivedFrom: "ethanol",
+    lhv_gravimetric: 28.9,
+    lhv_volumetric: 21.241,
+    costPerMJ: 0.048131,  // $1.391/kg ÷ 28.9 MJ/kg
+    lcaPerMJ: 26.43,
+    market_size_ej: 0.021675,
+    market_size_mmt: 0.75,
+    color: "#51cf66",
+    tag: "Ether (renewable, ex-ethanol)"
+  },
+
+  // ─────────────────────── BUTANOL ───────────────────────
+  {
+    id: "butanol_fossil",
+    name: "Butanol",
+    variant: "fossil",
+    type: "alcohol",
+    derivedFrom: null,
+    lhv_gravimetric: 32.9,
+    lhv_volumetric: 26.649,
+    costPerMJ: 0.027356,  // $0.9/kg ÷ 32.9 MJ/kg
+    lcaPerMJ: 74.468,
+    market_size_ej: 0.17108,
+    market_size_mmt: 5.2,
+    color: "#5c7cfa",
+    tag: "Alcohol (fossil)"
   },
   {
-    id: "magma",
-    name: "Icelandic Magma",
-    tag: "🥚 CLASSIFIED",
-    category: "geothermal exotic",
-    state: "liquid, ~1200°C",
-    lhv_gravimetric: 0.4,     // mostly just... hot rock
-    lhv_volumetric: 1.1,
-    storageC: 1200,
-    tankPenalty: 9.9,
-    costPerMJ: 0.001,
-    lcaPerMJ: -5,             // technically geothermal, technically negative if you squint
-    challenge: "Infinite local supply in Iceland. Tank material TBD. Combustor is really more of a volcano.",
-    color: "#ff5a3d",
-    hidden: true
+    id: "butanol_green",
+    name: "Butanol",
+    variant: "green",
+    type: "alcohol",
+    derivedFrom: "ethanol",
+    lhv_gravimetric: 32.9,
+    lhv_volumetric: 26.649,
+    costPerMJ: 0.041641,  // $1.37/kg ÷ 32.9 MJ/kg
+    lcaPerMJ: 37.75,
+    market_size_ej: 0.005593,
+    market_size_mmt: 0.17,
+    color: "#51cf66",
+    tag: "Alcohol (renewable, ex-ethanol)"
+  },
+
+  // ─────────────────────── BUTYLENE ───────────────────────
+  // Green butylene derived from ethanol (via ethanol dehydration)
+  {
+    id: "butylene_fossil",
+    name: "Butylene",
+    variant: "fossil",
+    type: "alkene",
+    derivedFrom: null,
+    lhv_gravimetric: 45.2,
+    lhv_volumetric: 26.578,
+    costPerMJ: 0.025896,  // $1.1705/kg ÷ 45.2 MJ/kg
+    lcaPerMJ: null,       // NaN in source data
+    market_size_ej: 0.06102,
+    market_size_mmt: 1.35,
+    color: "#5c7cfa",
+    tag: "Alkene (fossil)"
+  },
+  {
+    id: "butylene_green",
+    name: "Butylene",
+    variant: "green",
+    type: "alkene",
+    derivedFrom: "ethanol",
+    lhv_gravimetric: 45.2,
+    lhv_volumetric: 26.578,
+    costPerMJ: 0.040042,  // $1.8099/kg ÷ 45.2 MJ/kg
+    lcaPerMJ: 36.3,
+    market_size_ej: 0.0058165,
+    market_size_mmt: 0.12868,
+    color: "#51cf66",
+    tag: "Alkene (renewable, ex-ethanol)"
+  },
+
+  // ─────────────────────── DIBUTYL ETHER ───────────────────────
+  // Green DBE derived from ethanol
+  {
+    id: "dbe_fossil",
+    name: "Dibutyl Ether",
+    variant: "fossil",
+    type: "ether",
+    derivedFrom: null,
+    lhv_gravimetric: 41.025,
+    lhv_volumetric: 31.59,
+    costPerMJ: 0.024973,  // $1.0245/kg ÷ 41.025 MJ/kg
+    lcaPerMJ: null,       // NaN in source data
+    market_size_ej: null,
+    market_size_mmt: null,
+    color: "#5c7cfa",
+    tag: "Ether (fossil)"
+  },
+  {
+    id: "dbe_green",
+    name: "Dibutyl Ether",
+    variant: "green",
+    type: "ether",
+    derivedFrom: "ethanol",
+    lhv_gravimetric: 41.025,
+    lhv_volumetric: 31.59,
+    costPerMJ: 0.038013,  // $1.5595/kg ÷ 41.025 MJ/kg
+    lcaPerMJ: null,       // NaN in source data
+    market_size_ej: 0.0052791,
+    market_size_mmt: 0.12868,
+    color: "#51cf66",
+    tag: "Ether (renewable, ex-ethanol)"
   }
 ];
 
-// convenient lookups
+// Convenient lookups
 const FUEL_BY_ID = Object.fromEntries(FUELS.map(f => [f.id, f]));
