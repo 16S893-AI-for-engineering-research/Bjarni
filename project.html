@@ -82,8 +82,8 @@
 
       <div class="card mt-24 reveal">
         <h3>Energy density landscape</h3>
-        <p class="small">Same chart as the home page, kept here for reference while you read.</p>
-        <div id="fuel-scatter-2" class="mt-16"></div>
+        <p class="small">Select x and y axes to explore different fuel properties.</p>
+        <div id="dynamic-fuel-scatter" class="mt-16"></div>
       </div>
     </div>
   </section>
@@ -169,11 +169,9 @@
 <script src="js/home.js"></script>
 <script src="js/project.js"></script>
 <script>
-  // home.js's DOMContentLoaded handler looks for #fuel-scatter and #hero-stage,
-  // neither of which exist on this page, so it's a safe no-op include.
-  // Render the fuel scatter into this page's own container explicitly:
+  // Initialize dynamic fuel scatter instead of the static one
   document.addEventListener("DOMContentLoaded", () => {
-    if (typeof renderFuelScatter === "function") renderFuelScatter("fuel-scatter-2");
+    if (typeof initDynamicFuelScatter === "function") initDynamicFuelScatter("dynamic-fuel-scatter");
   });
 </script>
 </body>

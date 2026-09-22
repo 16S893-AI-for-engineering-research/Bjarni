@@ -2,6 +2,7 @@
 // Project page D3 visuals:
 //   1. Config x Size status matrix (heatmap-style grid) with hover detail.
 //   2. Small animated "today -> target" expansion diagram (concentric rings).
+//   3. Dynamic fuel scatter with selectable x/y axes.
 
 document.addEventListener("DOMContentLoaded", () => {
   initMatrix();
@@ -278,3 +279,201 @@ function positionTooltipP(tooltip, event) {
   top = Math.max(12, Math.min(window.innerHeight - h - 12, top));
   tooltip.style("left", left + "px").style("top", top + "px");
 }
+
+/* ==================== 3. DYNAMIC FUEL SCATTER WITH AXIS SELECTORS ==================== */
+
+function initDynamicFuelScatter(targetId) {
+  const el = document.getElementById(targetId);
+  if (!el || typeof FUELS === "undefined") return;
+  el.innerHTML = "";
+
+  // Define available metrics
+  const metrics = {
+    gravimetric: { label: "Gravimetric Energy Density (MJ/kg)", key: "lhv_gravimetric", domain: [0, 125] },
+    volumetric: { label: "Volumetric Energy Density (MJ/L)", key: "lhv_volumetric", domain: [0, 36] },
+    emissions: { label: "LCA/Emissions (gCO2eq/MJ)", key: "lcaPerMJ", domain: [0, 180] },
+    cost: { label: "Cost ($/MJ)", key: "costPerMJ", domain: [0, 0.1] }
+  };
+
+  // Create container for controls and chart
+  const container = document.createElement("div");
+  container.style.width = "100%";
+
+  // Control panel
+  const controls = document.createElement("div");
+  controls.style.display = "flex";
+  controls.style.gap = "24px";
+  controls.style.marginBottom = "20px";
+  controls.style.alignItems = "center";
+  controls.style.flexWrap = "wrap";
+
+  // X-axis selector
+  const xLabel = document.createElement("label");
+  xLabel.style.display = "flex";
+  xLabel.style.alignItems = "center";
+  xLabel.style.gap = "8px";
+  xLabel.style.fontFamily = "var(--mono)";
+  xLabel.style.fontSize = "12px";
+  xLabel.style.color = "var(--faint)";
+  xLabel.textContent = "X-axis: ";
+
+  const xSelect = document.createElement("select");
+  xSelect.style.padding = "6px 10px";
+  xSelect.style.fontFamily = "var(--mono)";
+  xSelect.style.fontSize = "12px";
+  xSelect.style.border = "1px solid var(--line)";
+  xSelect.style.borderRadius = "4px";
+  xSelect.style.background = "var(--bg)";
+  xSelect.style.color = "var(--ink)";
+  xSelect.style.cursor = "pointer";
+
+  Object.entries(metrics).forEach(([key, metric]) => {
+    const opt = document.createElement("option");
+    opt.value = key;
+    opt.textContent = metric.label;
+    if (key === "gravimetric") opt.selected = true;
+    xSelect.appendChild(opt);
+  });
+
+  xLabel.appendChild(xSelect);
+
+  // Y-axis selector
+  const yLabel = document.createElement("label");
+  yLabel.style.display = "flex";
+  yLabel.style.alignItems = "center";
+  yLabel.style.gap = "8px";
+  yLabel.style.fontFamily = "var(--mono)";
+  yLabel.style.fontSize = "12px";
+  yLabel.style.color = "var(--faint)";
+  yLabel.textContent = "Y-axis: ";
+
+  const ySelect = document.createElement("select");
+  ySelect.style.padding = "6px 10px";
+  ySelect.style.fontFamily = "var(--mono)";
+  ySelect.style.fontSize = "12px";
+  ySelect.style.border = "1px solid var(--line)";
+  ySelect.style.borderRadius = "4px";
+  ySelect.style.background = "var(--bg)";
+  ySelect.style.color = "var(--ink)";
+  ySelect.style.cursor = "pointer";
+
+  Object.entries(metrics).forEach(([key, metric]) => {
+    const opt = document.createElement("option");
+    opt.value = key;
+    opt.textContent = metric.label;
+    if (key === "volumetric") opt.selected = true;
+    ySelect.appendChild(opt);
+  });
+
+  yLabel.appendChild(ySelect);
+
+  controls.appendChild(xLabel);
+  controls.appendChild(yLabel);
+
+  // Chart container
+  const chartDiv = document.createElement("div");
+  chartDiv.id = "fuel-scatter-dynamic-chart";
+  chartDiv.style.width = "100%";
+  chartDiv.style.height = "400px";
+
+  container.appendChild(controls);
+  container.appendChild(chartDiv);
+  el.appendChild(container);
+
+  // Render function
+  function renderChart() {
+    const xKey = xSelect.value;
+    const yKey = ySelect.value;
+    const xMetric = metrics[xKey];
+    const yMetric = metrics[yKey];
+
+    chartDiv.innerHTML = "";
+
+    const margin = { top: 24, right: 26, bottom: 52, left: 58 };
+    const width = (chartDiv.clientWidth || 640) - margin.left - margin.right;
+    const height = 380 - margin.top - margin.bottom;
+
+    const svg = d3.select(chartDiv).append("svg")
+      .attr("viewBox", `0 0 ${width + margin.left + margin.right} ${height + margin.top + margin.bottom}`)
+      .attr("width", "100%")
+      .attr("height", "100%");
+
+    const g = svg.append("g").attr("transform", `translate(${margin.left},${margin.top})`);
+
+    const visibleFuels = FUELS.filter(f => !f.hidden);
+
+    const x = d3.scaleLinear().domain(xMetric.domain).range([0, width]);
+    const y = d3.scaleLinear().domain(yMetric.domain).range([height, 0]);
+
+    g.append("g")
+      .attr("transform", `translate(0,${height})`)
+      .call(d3.axisBottom(x).ticks(6))
+      .call(ax => ax.selectAll("text").attr("fill", "var(--muted)").attr("font-family", "var(--mono)").attr("font-size", 11))
+      .call(ax => ax.selectAll("line,path").attr("stroke", "var(--line)"));
+
+    g.append("g")
+      .call(d3.axisLeft(y).ticks(6))
+      .call(ax => ax.selectAll("text").attr("fill", "var(--muted)").attr("font-family", "var(--mono)").attr("font-size", 11))
+      .call(ax => ax.selectAll("line,path").attr("stroke", "var(--line)"));
+
+    g.append("text")
+      .attr("x", width / 2).attr("y", height + 42)
+      .attr("text-anchor", "middle").attr("fill", "var(--faint)")
+      .attr("font-family", "var(--mono)").attr("font-size", 11.5)
+      .text(xMetric.label + "  →");
+
+    g.append("text")
+      .attr("transform", `translate(-42,${height / 2}) rotate(-90)`)
+      .attr("text-anchor", "middle").attr("fill", "var(--faint)")
+      .attr("font-family", "var(--mono)").attr("font-size", 11.5)
+      .text(yMetric.label + "  →");
+
+    // gridlines
+    g.append("g").attr("opacity", 0.5)
+      .selectAll("line.gy")
+      .data(y.ticks(6)).join("line")
+      .attr("x1", 0).attr("x2", width)
+      .attr("y1", d => y(d)).attr("y2", d => y(d))
+      .attr("stroke", "var(--line)").attr("stroke-dasharray", "2,4");
+
+    const tooltip = getTooltip();
+
+    const nodes = g.selectAll("circle.fuel")
+      .data(visibleFuels)
+      .join("circle")
+      .attr("class", "fuel")
+      .attr("cx", d => x(d[xMetric.key]))
+      .attr("cy", d => y(d[yMetric.key]))
+      .attr("r", 0)
+      .attr("fill", d => d.color)
+      .attr("fill-opacity", 0.85)
+      .attr("stroke", "#000")
+      .attr("stroke-opacity", 0.25)
+      .style("cursor", "pointer")
+      .on("mouseenter", function (event, d) {
+        d3.select(this).transition().duration(150).attr("r", 12);
+        tooltip
+          .html(`
+            <div class="tt-title" style="color:${d.color}">${d.name}</div>
+            <div class="tt-row"><span>${xMetric.label}</span><span>${d[xMetric.key].toFixed(2)}</span></div>
+            <div class="tt-row"><span>${yMetric.label}</span><span>${d[yMetric.key].toFixed(2)}</span></div>
+            <div class="tt-row"><span>state</span><span>${d.state}</span></div>
+          `)
+          .classed("show", true);
+      })
+      .on("mousemove", (event) => positionTooltip(tooltip, event))
+      .on("mouseleave", function () {
+        d3.select(this).transition().duration(150).attr("r", 8);
+        tooltip.classed("show", false);
+      });
+
+    nodes.transition().delay((d, i) => i * 40).duration(400).ease(d3.easeBackOut).attr("r", 8);
+  }
+
+  renderChart();
+  xSelect.addEventListener("change", renderChart);
+  ySelect.addEventListener("change", renderChart);
+}
+
+// Expose for external calls
+window.initDynamicFuelScatter = initDynamicFuelScatter;
