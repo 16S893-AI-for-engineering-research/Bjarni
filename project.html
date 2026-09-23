@@ -17,13 +17,15 @@
   <section style="padding-bottom:20px;">
     <div class="wrap">
       <div class="eyebrow">project outline</div>
-      <h1>From one fuel, one shape<br/>to <span class="grad-text">twelve fuels, four shapes.</span></h1>
+      <h1>From Jet-A + SAF and T+W<br/>to <span class="grad-text">13 fuels and four aircraft configurations.</span></h1>
       <p class="lead mt-16">
-        TASOPT (Transport Aircraft System OPTimization) is a physics-based aircraft sizing &amp; optimization
-        tool. Today it's very good at one thing: conventional tube-and-wing airplanes burning
-        conventional, Jet-A-like fuel. This project uses an AI coding agent to rapidly extend TASOPT's
-        modelling capability along two axes at once — <b>fuel</b> and <b>airframe</b> — so we can quantify
-        how radically different fuels reshape the aircraft that has to carry them.
+        TASOPT (Transport Aircraft System OPTimization) is a physics-based tool for sizing and optimizing
+        transport aircraft. In its current form, it models one fuel — Jet-A, and by extension SAF, which
+        shares its properties — carried in one airframe family, the conventional tube-and-wing aircraft.
+        This project uses an AI coding agent to extend TASOPT along two coupled dimensions, <b>fuel
+        chemistry</b> and <b>airframe geometry</b>, so the tool can evaluate thirteen candidate fuels
+        across four aircraft configurations, and quantify how each fuel reshapes the aircraft required to
+        carry it.
       </p>
     </div>
   </section>
@@ -34,17 +36,18 @@
       <div class="grid cols-2" style="align-items:center;">
         <div class="reveal">
           <div class="eyebrow">the constraint today</div>
-          <h2>TASOPT's current box</h2>
+          <h2>TASOPT's current scope</h2>
           <p>
-            Tube-and-wing fuselages only. Fuels that behave like Jet-A — similar density, similar
-            energy content, stored as an ambient liquid, dropped straight into a wing tank. That's a fine
-            assumption for kerosene. It falls apart the moment you try hydrogen, ammonia, or methanol,
-            where energy density, storage temperature, and tank volume all move by factors of 2–14×.
+            TASOPT's default assumptions include a cylindrical fuselage, a swept wing, and a fuel that
+            behaves like Jet-A — an ambient-temperature liquid with well-characterized density and energy
+            content. That covers most of today's fleet, but breaks down for hydrogen, which must be stored
+            cryogenically, and for lower-energy-density liquids that no longer fit a wing tank sized for
+            kerosene.
           </p>
         </div>
         <div class="card reveal">
           <div id="expansion-rings" style="width:100%; max-width:520px; margin:0 auto;"></div>
-          <p class="small center mt-8">TASOPT today → the target design space (drag your eyes around the rings)</p>
+          <p class="small center mt-8">TASOPT's current scope → the target design space (drag your eyes around the rings)</p>
         </div>
       </div>
     </div>
@@ -55,34 +58,42 @@
     <div class="wrap">
       <div class="reveal">
         <div class="eyebrow">axis 1 — fuel</div>
-        <h2>Twelve fuels, one reference</h2>
+        <h2>Thirteen fuels, one reference</h2>
         <p class="lead">
-          Jet-A stays in as the reference case. Alongside it: three families of alternative fuel, each
-          breaking a different TASOPT assumption.
+          Jet-A remains the reference case, with SAF included as a chemically identical drop-in
+          alternative. Alongside them sit two further groups of candidate fuel, each stressing a
+          different assumption in TASOPT's current fuel model.
         </p>
       </div>
 
       <div class="grid cols-3 mt-24 reveal">
         <div class="card">
-          <h3 style="color:var(--saf)">Drop-in SAF family</h3>
-          <p>HEFA, Fischer–Tropsch, Alcohol-to-Jet, e-Kerosene (PtL). Chemically close to Jet-A — the
-          "easy" cases that stress-test the fuel-property interface without breaking tank geometry.</p>
+          <h3 style="color:var(--saf)">Jet-A and SAF</h3>
+          <p>Jet-A as the reference, and SAF as its drop-in analog — nearly identical energy density and
+          handling. This pair anchors every comparison and lets the fuel-property interface be validated
+          against the case TASOPT already handles correctly.</p>
         </div>
         <div class="card">
           <h3 style="color:var(--cryo)">Cryogenic fuels</h3>
-          <p>Liquid hydrogen and liquid methane. Huge gravimetric energy density, terrible volumetric
-          density (LH2 especially) — insulated cryo tanks want to eat the fuselage.</p>
+          <p>Hydrogen, methane, ethane, and ethylene, modeled here in both fossil and renewable forms.
+          These must be stored as cryogenic liquids, and hydrogen in particular carries far more energy
+          per unit mass than Jet-A but far less per unit volume — insulated tanks compete directly with
+          the fuselage for space.</p>
         </div>
         <div class="card">
-          <h3 style="color:var(--nondrop)">Non-drop-in liquids</h3>
-          <p>Ammonia, methanol, ethanol, butanol, DME, and LOHC. Ambient-ish handling, but energy density
-          roughly half of Jet-A — tanks get big, airframes get long, or both.</p>
+          <h3 style="color:var(--nondrop)">Hydrocarbon and alcohol liquids</h3>
+          <p>Butane, butylene, methanol, ethanol, butanol, DME, and dibutyl ether — handled as ambient or
+          lightly pressurized liquids, not cryogenics. All of them carry less energy per unit volume than
+          Jet-A, which alone drives larger tanks; several (methanol especially) carry less energy per unit
+          mass as well.</p>
         </div>
       </div>
 
       <div class="card mt-24 reveal">
-        <h3>Energy density landscape</h3>
-        <p class="small">Select x and y axes to explore different fuel properties.</p>
+        <h3>Fuel property landscape</h3>
+        <p class="small" style="max-width:none;">Select which properties to compare on each axis — energy density, well-to-wake
+        emissions, cost per unit energy, or market scale — to see how the thirteen fuels trade off against
+        one another.</p>
         <div id="dynamic-fuel-scatter" class="mt-16"></div>
       </div>
     </div>
@@ -95,11 +106,38 @@
         <div class="eyebrow">axis 2 — airframe</div>
         <h2>Four configurations, spanning regional to ultra-widebody</h2>
         <p class="lead">
-          Different fuels reward different fuselage shapes — a cryogenic tank wants volume, not a slender
-          tube. So we expand the airframe library alongside the fuel library, and cross the two with
-          aircraft size class.
+          Different fuels reward different fuselage shapes — a cryogenic tank needs volume, not a slender
+          tube. So the airframe library is expanded alongside the fuel library, and the two are crossed
+          against aircraft size class.
         </p>
       </div>
+
+      <div class="config-thumb-grid mt-24 reveal">
+        <div class="config-thumb">
+          <div class="config-thumb-photo"><img src="assets/aircraft/tube-wing.jpg" alt="Tube &amp; Wing" loading="lazy" /></div>
+          <div class="config-thumb-label">Tube &amp; Wing</div>
+          <div class="config-thumb-credit">Boeing 777X gallery image — photo: Boeing</div>
+        </div>
+        <div class="config-thumb">
+          <div class="config-thumb-photo"><img src="assets/aircraft/d8.jpg" alt="Double-Bubble (D8)" loading="lazy" /></div>
+          <div class="config-thumb-label">Double-Bubble (D8)</div>
+          <div class="config-thumb-credit">MIT / Aurora Flight Sciences D8 concept — image: NASA/MIT/Aurora Flight Sciences (public domain)</div>
+        </div>
+        <div class="config-thumb">
+          <div class="config-thumb-photo"><img src="assets/aircraft/bwb.jpg" alt="Blended Wing Body" loading="lazy" /></div>
+          <div class="config-thumb-label">Blended Wing Body</div>
+          <div class="config-thumb-credit">JetZero blended wing image — photo: JetZero</div>
+        </div>
+        <div class="config-thumb">
+          <div class="config-thumb-photo"><img src="assets/aircraft/tbw.jpg" alt="Truss-Braced Wing" loading="lazy" /></div>
+          <div class="config-thumb-label">Truss-Braced Wing</div>
+          <div class="config-thumb-credit">NASA/Boeing X-66A Sustainable Flight Demonstrator — photo: NASA (public domain)</div>
+        </div>
+      </div>
+
+      <p class="small mt-16 reveal" style="max-width:none;">Tube &amp; Wing is TASOPT's existing baseline; D8, Blended Wing Body, and
+      Truss-Braced Wing are the three configurations this project adds. The matrix below crosses all four
+      against four size classes, from regional to ultra-widebody.</p>
 
       <div class="mt-24 reveal" style="overflow-x:auto;">
         <div id="config-matrix" style="min-width:820px;"></div>
@@ -120,26 +158,55 @@
         <div class="eyebrow">how we get there</div>
         <h2>Why an AI coding agent, specifically</h2>
         <p class="lead">
-          TASOPT's Fortran/Julia codebase encodes a lot of institutional knowledge about tube-and-wing,
-          Jet-A aircraft. Extending it to 12 new fuels and 3 new airframe families by hand is a multi-year
-          slog of module-by-module rewrites. The bet here: use an AI agent to accelerate that
-          re-derivation — new weight models, new tank/thermal models, new mission-fuel-burn coupling —
-          while a human (hi) keeps the physics honest.
+          TASOPT's subsystems — aerodynamics, structures, propulsion, weight, mission — are tightly
+          coupled, so a change to one (say, tank geometry) has to be propagated correctly through every
+          other subsystem that depends on it. Doing that by hand across 13 fuels and 4 airframe families
+          is slow, and easy to get subtly wrong when no single person holds every dependency in view.
+        </p>
+        <p class="lead mt-16">
+          An AI coding agent can hold and search the whole codebase at once, tracing how an assumption
+          ripples across modules and flagging every place it needs to be updated — keeping the physics
+          internally consistent as the code grows. The agent proposes and implements those coupled
+          changes; a human reviews every derivation and every resulting line of code before it is trusted.
         </p>
       </div>
       <div class="grid cols-3 mt-24 reveal">
         <div class="card">
           <h3>1. Fuel property layer</h3>
-          <p>Generalize the fuel model: energy density, density vs. temperature, storage phase, boil-off — parametrized, not hard-coded to Jet-A.</p>
+          <p>Generalize the fuel model — energy density, density vs. temperature, storage phase, boil-off —
+          so these are parameters read from a table, not values hard-coded to Jet-A.</p>
         </div>
         <div class="card">
           <h3>2. Airframe geometry layer</h3>
-          <p>Add D8, BWB, and TBW geometry &amp; weight modules alongside the existing tube-and-wing model.</p>
+          <p>Add D8, Blended Wing Body, and Truss-Braced Wing geometry and weight modules alongside the
+          existing tube-and-wing model, and make sure each one's assumptions stay consistent with the rest
+          of the codebase.</p>
         </div>
         <div class="card">
           <h3>3. Coupled optimization</h3>
-          <p>Let the optimizer re-balance wing loading, tank placement, and mission profile for each fuel × config × size combination.</p>
+          <p>Let the optimizer re-balance wing loading, tank placement, and mission profile for every fuel ×
+          configuration × size combination, with subsystem interactions checked automatically rather than
+          by hand.</p>
         </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ VALIDATION ============ -->
+  <section>
+    <div class="wrap">
+      <div class="reveal">
+        <div class="eyebrow">how we know it's right</div>
+        <h2>Checking the model against known results</h2>
+        <p class="lead">
+          Each new fuel or airframe module is checked in two ways before it is trusted. First, against
+          published data: where a concept aircraft has documented weight, geometry, or fuel-burn numbers
+          (the D8, JetZero's Blended Wing Body, or the X-66A Truss-Braced Wing, for example), the model's
+          output is compared to those public figures. Second, against internal consistency: a change to one
+          subsystem — a new tank model, say — must not silently change the answer TASOPT already gives for
+          the Jet-A, tube-and-wing case it was validated on originally. Both checks are run every time the
+          agent proposes a change, not just at the end of the project.
+        </p>
       </div>
     </div>
   </section>
@@ -151,10 +218,11 @@
         <div class="eyebrow">what's next in the PhD</div>
         <h2>From pre-screening to system impact</h2>
         <p class="lead">
-          The work so far has been high-level system screening of alternative fuels — figuring out which
-          ones are even worth a deeper look. The next step is exactly what this tool enables: modelling
-          the two-way coupling between fuel choice and aircraft design, to understand the
-          <b>total system impact</b> of switching fuels — not just at the tank, but across the whole airplane.
+          The work so far has been high-level system screening of alternative fuels — identifying which
+          ones are worth a deeper, aircraft-coupled look. This project is the next step: a tool capable of
+          modeling the two-way coupling between fuel choice and aircraft design, so we can quantify the
+          <b>total system impact</b> of switching fuels — not only at the fuel tank, but across the whole
+          airplane, and downstream in fleet-level fuel burn and emissions.
         </p>
       </div>
     </div>

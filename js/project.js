@@ -364,7 +364,7 @@ function initDynamicFuelScatter(targetId) {
   controls.appendChild(xWrapper);
 
   // Y-axis selector
-  const { wrapper: yWrapper, select: ySelect } = createSelector("Y-axis", axisMetrics, "emissions");
+  const { wrapper: yWrapper, select: ySelect } = createSelector("Y-axis", axisMetrics, "volumetric");
   controls.appendChild(yWrapper);
 
   // Bubble size selector

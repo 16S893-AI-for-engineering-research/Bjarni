@@ -220,6 +220,33 @@ p.lead{ font-size:clamp(15px,1.6vw,19px); color:var(--muted); max-width:60ch; }
   margin:7px 0 14px;
 }
 
+/* ---------- small square config thumbnails (project.html axis 2) ---------- */
+.config-thumb-grid{
+  display:grid; grid-template-columns:repeat(4,1fr); gap:14px;
+}
+@media (max-width:900px){
+  .config-thumb-grid{ grid-template-columns:repeat(2,1fr); }
+}
+.config-thumb{
+  text-align:center;
+}
+.config-thumb-photo{
+  position:relative; width:100%; aspect-ratio:1/1; border-radius:10px; overflow:hidden;
+  background:#05070b; border:1px solid var(--card-bd);
+}
+.config-thumb-photo img{
+  width:100%; height:100%; object-fit:cover; display:block;
+  transition:transform .5s ease;
+}
+.config-thumb:hover .config-thumb-photo img{ transform:scale(1.08); }
+.config-thumb-label{
+  font-family:var(--mono); font-size:12px; font-weight:700; color:var(--ink);
+  margin-top:8px;
+}
+.config-thumb-credit{
+  font-family:var(--mono); font-size:9.5px; color:var(--faint); line-height:1.4; margin-top:2px;
+}
+
 /* ---------- scroll reveal ---------- */
 .reveal{ opacity:0; transform: translateY(26px); transition: opacity .7s ease, transform .7s ease; }
 .reveal.in{ opacity:1; transform:translateY(0); }

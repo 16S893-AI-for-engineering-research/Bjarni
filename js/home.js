@@ -17,6 +17,7 @@ document.addEventListener("DOMContentLoaded", () => {
 // exposed so other pages (e.g. project.html) can render the same chart
 // into a differently-named container without re-running the hero/counters.
 window.renderFuelScatter = initFuelScatter;
+window.initConfigPreviewCards = initConfigPreviewCards;
 
 /* ============================== 1. HERO (real aircraft photos) ============================== */
 // Cross-fades through the four airframe photos in data/aircraft.js (CONFIGS),
@@ -83,8 +84,8 @@ function initHero() {
 // same photo + credit data used by the hero, so there's a single source of
 // truth (data/aircraft.js) instead of hard-coded HTML per card.
 
-function initConfigPreviewCards() {
-  const grid = document.getElementById("config-preview-grid");
+function initConfigPreviewCards(targetId) {
+  const grid = document.getElementById(targetId || "config-preview-grid");
   if (!grid || typeof CONFIGS === "undefined") return;
 
   grid.innerHTML = CONFIGS.map(cfg => `
