@@ -14,7 +14,11 @@
      .log-entry .notes-col p { font-size: 1rem !important; }                                
      /* Date header now sits above both columns for every entry */                          
      .log-entry > .log-date { margin-bottom: 14px; }                                        
-     .log-entry > .entry-grid { display:grid; grid-template-columns:1fr 1fr; gap:32px; }    
+     /* Force equal column widths for agent log and notes and prevent overflow */           
+     .log-entry > .entry-grid { display:grid; grid-template-columns:1fr 1fr !important; gap:32px; align-items:start; }
+     .log-entry .agent-col, .log-entry .notes-col { width:100%; min-width:0; }
+     /* Small visual tweak so long verbatim blocks don't expand one column */              
+     .log-entry pre { white-space:pre-wrap; word-break:break-word; color:var(--muted); }
    </style>                                                                                 
    </head>                                                                                  
    <body>                                                                                   
@@ -236,30 +240,44 @@
            </div>                                                                           
          </div>                                                                             
                                                                                             
-         <!--                                                                               
+         <!--                                                                                
            New entries go below this line, in chronological order (oldest first,            
            most recent last) so the log reads top-to-bottom the same way the                
            project unfolded. Keep newer entries concise (~3-4 lines, one line               
            per badge) unless a session genuinely warrants more detail.                      
-                                                                                            
-           <div class="log-entry reveal">                                                   
-             <div class="log-date">DD Mon YYYY &middot; short session title</div>           
-             <div class="entry-grid">                                                       
-               <div class="agent-col">                                                      
-                 <div class="log-section-label" style="font-weight:700; color:var(--muted); 
- font-size:0.9rem; margin-bottom:6px;">Agent log</div>                                      
-                 <p><span class="badge delegated">Delegated</span> ...</p>                  
-                 <p><span class="badge checked">Checked</span> ...</p>                      
-                 <p><span class="badge rejected">Rejected / open</span> ...</p>             
-               </div>                                                                       
-               <div class="notes-col">                                                      
-                 <div class="log-section-label" style="font-weight:700; color:var(--muted); 
- font-size:0.9rem; margin-bottom:6px;">My notes</div>                                       
-                 <p style="color:var(--muted);">...</p>                                     
-               </div>                                                                       
-             </div>                                                                         
-           </div>                                                                           
          -->                                                                                
+
+         <!-- ========= New log entries (user-supplied) ========= -->
+         <div class="log-entry reveal">
+           <div class="log-date">21 Sept 2026 &middot; pi update — regression observed</div>
+           <div class="entry-grid">
+             <div class="agent-col">
+               <div class="log-section-label" style="font-weight:700; color:var(--muted); font-size:0.9rem; margin-bottom:6px;">Agent log</div>
+               <p>&nbsp;</p>
+             </div>
+             <div class="notes-col">
+               <div class="log-section-label" style="font-weight:700; color:var(--muted); font-size:0.9rem; margin-bottom:6px;">My notes</div>
+               <p style="color:var(--muted);">pi update released. pi does not work. Unable to get any bash commands to work! Attempting to revert back to an older version (~0.73) but the revert does not restore functionality.</p>
+             </div>
+           </div>
+         </div>
+
+         <div class="log-entry reveal">
+           <div class="log-date">22 Sept 2026 &middot; Revert &ndash; follow-up</div>
+           <div class="entry-grid">
+             <div class="agent-col">
+               <div class="log-section-label" style="font-weight:700; color:var(--muted); font-size:0.9rem; margin-bottom:6px;">Agent log</div>
+               <p>&nbsp;</p>
+             </div>
+             <div class="notes-col">
+               <div class="log-section-label" style="font-weight:700; color:var(--muted); font-size:0.9rem; margin-bottom:6px;">My notes</div>
+               <p style="color:var(--muted);">Reverted back to early Sept version and everything works again. Can resume minor edits to TASOPT here and there. The agent may have created new plotting issues such that dozens of mini step plot files are generated for each aircraft plot. Another AI agent was adamant that there are issues with the read/write of .toml files - inconsistencies. Haiku 4.5 misunderstood it and wrote a .toml reader; the sheer volume of emoji should have told me it was hyping up what it had done. Its implementation didn't solve anything as existing .jl packages already handle TOML. Gave the task over to Sonnet 5; it kept running around itself and was unable to propose an architecture to harmonize I/O of .toml into aircraft structs within TASOPT. Atomizing tasks is required. On a different topic, added password access to the website and updated the plot in project.html so it is now interactive and shows the overall tradespace across different dimensions.</p>
+             </div>
+           </div>
+         </div>
+
+         <!-- ====================================================== -->
+
                                                                                             
        </div>                                                                               
      </section>                                                                             
