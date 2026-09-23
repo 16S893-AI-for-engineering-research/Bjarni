@@ -21,8 +21,8 @@ const anim=document.createElement('div'); Object.assign(anim.style,{position:'ab
   <section style="padding-top: clamp(30px,5vh,60px);">
     <div class="wrap">
       <div class="eyebrow"><span class="dot" style="width:6px;height:6px;border-radius:50%;background:var(--cryo);display:inline-block;"></span> LAE &middot; PhD Class Project</div>
-      <h1>Teaching <span class="grad-text">TASOPT</span> to dream<br/>in twelve fuels and<br/>four airframes.</h1>
-      <p class="lead mt-16">
+      <h1>Teaching <span class="grad-text">TASOPT</span> to dream<br/>in 13 fuels and<br/>four airframes.</h1>
+      <p class="lead mt-16" style="max-width:none;">
         TASOPT optimizes tube-and-wing aircraft burning Jet-A-like fuel. This project uses an AI coding agent
         to blow that box wide open — new fuels, new fuselages, new size classes — so we can understand the
         <em>total system impact</em> of changing what an airplane drinks.
@@ -53,7 +53,7 @@ const anim=document.createElement('div'); Object.assign(anim.style,{position:'ab
     <div class="wrap">
       <div class="grid cols-4 reveal">
         <div class="card center">
-          <div style="font-family:var(--mono); font-size:38px; font-weight:700; color:var(--jetA);"><span data-count="12">0</span></div>
+          <div style="font-family:var(--mono); font-size:38px; font-weight:700; color:var(--jetA);"><span data-count="13">0</span></div>
           <div class="small mt-8">fuels modeled<br/>(incl. Jet-A reference)</div>
         </div>
         <div class="card center">
@@ -65,7 +65,7 @@ const anim=document.createElement('div'); Object.assign(anim.style,{position:'ab
           <div class="small mt-8">size classes<br/>regional → ultra-widebody</div>
         </div>
         <div class="card center">
-          <div style="font-family:var(--mono); font-size:38px; font-weight:700; color:var(--rose);"><span data-count="14">0</span>×</div>
+          <div style="font-family:var(--mono); font-size:38px; font-weight:700; color:var(--rose);"><span data-count="6.0">0</span>×</div>
           <div class="small mt-8">energy density spread,<br/>LH2 vs methanol</div>
         </div>
       </div>
@@ -78,7 +78,7 @@ const anim=document.createElement('div'); Object.assign(anim.style,{position:'ab
       <div class="reveal">
         <div class="eyebrow">why this is hard</div>
         <h2>Every fuel is its own airplane problem</h2>
-        <p class="lead">
+        <p class="lead" style="max-width:none;">
           Swap Jet-A for liquid hydrogen and you don't just change a number in a fuel-burn equation —
           you change tank volume, tank mass, CG, wetted area, boil-off, and where the wing spar can even go.
           Hover the dots.
@@ -96,10 +96,29 @@ const anim=document.createElement('div'); Object.assign(anim.style,{position:'ab
       <div class="reveal">
         <div class="eyebrow">the airframe axis</div>
         <h2>Four shapes, one optimizer</h2>
-        <p class="lead">Beyond fuel, we're also stretching TASOPT across radically different airframe families — full detail on the project page.</p>
+        <p class="lead" style="max-width:none;">Beyond fuel, we're also stretching TASOPT across radically different airframe families — full detail on the project page.</p>
       </div>
-      <div class="grid cols-4 mt-24 reveal" id="config-preview-grid">
-        <!-- populated by js/home.js from data/aircraft.js so photos + credits stay data-driven -->
+      <div class="config-thumb-grid mt-24 reveal">
+        <div class="config-thumb">
+          <div class="config-thumb-photo"><img src="assets/aircraft/tube-wing.jpg" alt="Tube &amp; Wing" loading="lazy" /></div>
+          <div class="config-thumb-label">Tube &amp; Wing</div>
+          <div class="config-thumb-credit">Boeing 777X gallery image — photo: Boeing</div>
+        </div>
+        <div class="config-thumb">
+          <div class="config-thumb-photo"><img src="assets/aircraft/d8.jpg" alt="Double-Bubble (D8)" loading="lazy" /></div>
+          <div class="config-thumb-label">Double-Bubble (D8)</div>
+          <div class="config-thumb-credit">MIT / Aurora Flight Sciences D8 concept — image: NASA/MIT/Aurora Flight Sciences (public domain)</div>
+        </div>
+        <div class="config-thumb">
+          <div class="config-thumb-photo"><img src="assets/aircraft/bwb.jpg" alt="Blended Wing Body" loading="lazy" /></div>
+          <div class="config-thumb-label">Blended Wing Body</div>
+          <div class="config-thumb-credit">JetZero blended wing image — photo: JetZero</div>
+        </div>
+        <div class="config-thumb">
+          <div class="config-thumb-photo"><img src="assets/aircraft/tbw.jpg" alt="Truss-Braced Wing" loading="lazy" /></div>
+          <div class="config-thumb-label">Truss-Braced Wing</div>
+          <div class="config-thumb-credit">NASA/Boeing X-66A Sustainable Flight Demonstrator — photo: NASA (public domain)</div>
+        </div>
       </div>
       <div class="center mt-24 reveal">
         <a href="project.html" class="btn primary">Explore the full config × size matrix →</a>

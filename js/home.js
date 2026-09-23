@@ -121,6 +121,12 @@ function initFuelScatter(targetId) {
   // the public-facing chart — it still lives in the data file for the secret page.
   const visibleFuels = FUELS.filter(f => !f.hidden);
 
+  // Assign each fuel a distinct display color purely for visual separation —
+  // this is not tied to any underlying property, just an ordinal color scale
+  // so every dot (and its label) is easy to tell apart at a glance.
+  const colorScale = d3.scaleOrdinal(d3.schemeTableau10.concat(d3.schemeSet3))
+    .domain(visibleFuels.map(f => f.id));
+
   const x = d3.scaleLinear().domain([0, 125]).range([0, width]);
   const y = d3.scaleLinear().domain([0, 36]).range([height, 0]);
 
@@ -164,7 +170,7 @@ function initFuelScatter(targetId) {
     .attr("cx", d => x(d.lhv_gravimetric))
     .attr("cy", d => y(d.lhv_volumetric))
     .attr("r", 0)
-    .attr("fill", d => d.color)
+    .attr("fill", d => colorScale(d.id))
     .attr("fill-opacity", 0.85)
     .attr("stroke", "#000")
     .attr("stroke-opacity", 0.25)
@@ -173,10 +179,10 @@ function initFuelScatter(targetId) {
       d3.select(this).transition().duration(150).attr("r", 12);
       tooltip
         .html(`
-          <div class="tt-title" style="color:${d.color}">${d.name}</div>
+          <div class="tt-title" style="color:${colorScale(d.id)}">${d.name}</div>
           <div class="tt-row"><span>gravimetric</span><span>${d.lhv_gravimetric} MJ/kg</span></div>
           <div class="tt-row"><span>volumetric</span><span>${d.lhv_volumetric} MJ/L</span></div>
-          <div class="tt-row"><span>state</span><span>${d.state}</span></div>
+          <div class="tt-row"><span>variant</span><span>${d.variant === 'fossil' ? 'Fossil' : 'Green'}</span></div>
         `)
         .classed("show", true);
     })
@@ -188,17 +194,24 @@ function initFuelScatter(targetId) {
 
   nodes.transition().delay((d, i) => i * 60).duration(500).ease(d3.easeBackOut).attr("r", 8);
 
-  // labels for reference + hydrogen (avoid clutter — just call out extremes)
-  ["jetA", "lh2"].forEach(id => {
-    const d = FUEL_BY_ID[id];
-    g.append("text")
-      .attr("x", x(d.lhv_gravimetric)).attr("y", y(d.lhv_volumetric) - 14)
-      .attr("text-anchor", "middle").attr("fill", "var(--ink)")
-      .attr("font-family", "var(--mono)").attr("font-size", 11)
-      .attr("opacity", 0)
-      .text(d.name)
-      .transition().delay(900).duration(500).attr("opacity", .85);
-  });
+  // labelData: exactly one label per fuel name. Prefer the fossil variant
+  // when both exist (they share identical energy-density coordinates), but
+  // fall back to the green variant for fuels with no fossil counterpart
+  // (e.g. ethanol) so every fuel still gets exactly one label.
+  const labelData = Array.from(
+    d3.group(visibleFuels, f => f.name).values()
+  ).map(group => group.find(f => f.variant === "fossil") || group[0]);
+  g.selectAll("text.fuel-label")
+    .data(labelData)
+    .join("text")
+    .attr("class", "fuel-label")
+    .attr("x", d => x(d.lhv_gravimetric))
+    .attr("y", d => y(d.lhv_volumetric) - 14)
+    .attr("text-anchor", "middle").attr("fill", "var(--ink)")
+    .attr("font-family", "var(--mono)").attr("font-size", 10)
+    .attr("opacity", 0)
+    .text(d => d.name)
+    .transition().delay((d, i) => i * 60 + 400).duration(500).attr("opacity", .85);
 }
 
 /* ============================ tooltip utils ============================ */
@@ -234,7 +247,8 @@ function initCounters() {
           function step(now) {
             const p = Math.min(1, (now - start) / dur);
             const v = target * d3.easeCubicOut(p);
-            el.textContent = (target % 1 === 0) ? Math.round(v) : v.toFixed(1);
+            const isInt = Number.isInteger(target) && !el.dataset.count.includes(".");
+            el.textContent = isInt ? Math.round(v) : v.toFixed(1);
             if (p < 1) requestAnimationFrame(step);
           }
           requestAnimationFrame(step);
