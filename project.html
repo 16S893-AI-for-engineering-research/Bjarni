@@ -18,7 +18,7 @@
     <div class="wrap">
       <div class="eyebrow">project outline</div>
       <h1>From Jet-A + SAF and T+W<br/>to <span class="grad-text">13 fuels and four aircraft configurations.</span></h1>
-      <p class="lead mt-16">
+      <p class="lead mt-16" style="max-width:none;">
         TASOPT (Transport Aircraft System OPTimization) is a physics-based tool for sizing and optimizing
         transport aircraft. In its current form, it models one fuel — Jet-A, and by extension SAF, which
         shares its properties — carried in one airframe family, the conventional tube-and-wing aircraft.
@@ -37,7 +37,7 @@
         <div class="reveal">
           <div class="eyebrow">the constraint today</div>
           <h2>TASOPT's current scope</h2>
-          <p>
+          <p class="lead">
             TASOPT's default assumptions include a cylindrical fuselage, a swept wing, and a fuel that
             behaves like Jet-A — an ambient-temperature liquid with well-characterized density and energy
             content. That covers most of today's fleet, but breaks down for hydrogen, which must be stored
@@ -59,7 +59,7 @@
       <div class="reveal">
         <div class="eyebrow">axis 1 — fuel</div>
         <h2>Thirteen fuels, one reference</h2>
-        <p class="lead">
+        <p class="lead" style="max-width:none;">
           Jet-A remains the reference case, with SAF included as a chemically identical drop-in
           alternative. Alongside them sit two further groups of candidate fuel, each stressing a
           different assumption in TASOPT's current fuel model.
@@ -105,7 +105,7 @@
       <div class="reveal">
         <div class="eyebrow">axis 2 — airframe</div>
         <h2>Four configurations, spanning regional to ultra-widebody</h2>
-        <p class="lead">
+        <p class="lead" style="max-width:none;">
           Different fuels reward different fuselage shapes — a cryogenic tank needs volume, not a slender
           tube. So the airframe library is expanded alongside the fuel library, and the two are crossed
           against aircraft size class.
@@ -157,13 +157,13 @@
       <div class="reveal">
         <div class="eyebrow">how we get there</div>
         <h2>Why an AI coding agent, specifically</h2>
-        <p class="lead">
+        <p class="lead" style="max-width:none;">
           TASOPT's subsystems — aerodynamics, structures, propulsion, weight, mission — are tightly
           coupled, so a change to one (say, tank geometry) has to be propagated correctly through every
           other subsystem that depends on it. Doing that by hand across 13 fuels and 4 airframe families
           is slow, and easy to get subtly wrong when no single person holds every dependency in view.
         </p>
-        <p class="lead mt-16">
+        <p class="lead mt-16" style="max-width:none;">
           An AI coding agent can hold and search the whole codebase at once, tracing how an assumption
           ripples across modules and flagging every place it needs to be updated — keeping the physics
           internally consistent as the code grows. The agent proposes and implements those coupled
@@ -198,7 +198,7 @@
       <div class="reveal">
         <div class="eyebrow">how we know it's right</div>
         <h2>Checking the model against known results</h2>
-        <p class="lead">
+        <p class="lead" style="max-width:none;">
           Each new fuel or airframe module is checked in two ways before it is trusted. First, against
           published data: where a concept aircraft has documented weight, geometry, or fuel-burn numbers
           (the D8, JetZero's Blended Wing Body, or the X-66A Truss-Braced Wing, for example), the model's
@@ -217,7 +217,7 @@
       <div class="card reveal" style="background:linear-gradient(120deg, rgba(232,176,75,.08), rgba(95,210,194,.06));">
         <div class="eyebrow">what's next in the PhD</div>
         <h2>From pre-screening to system impact</h2>
-        <p class="lead">
+        <p class="lead" style="max-width:none;">
           The work so far has been high-level system screening of alternative fuels — identifying which
           ones are worth a deeper, aircraft-coupled look. This project is the next step: a tool capable of
           modeling the two-way coupling between fuel choice and aircraft design, so we can quantify the
