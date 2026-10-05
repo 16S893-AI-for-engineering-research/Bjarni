@@ -276,6 +276,60 @@
            </div>
          </div>
 
+         <div class="log-entry reveal">
+           <div class="log-date">28 Sept 2026 &middot; TASOPT stick-figure checks, .toml round-trip, fleet tuning</div>
+           <div class="entry-grid">
+             <div class="agent-col">
+               <div class="log-section-label" style="font-weight:700; color:var(--muted); font-size:0.9rem; margin-bottom:6px;">Agent log</div>
+               <p>&nbsp;</p>
+             </div>
+             <div class="notes-col">
+               <div class="log-section-label" style="font-weight:700; color:var(--muted); font-size:0.9rem; margin-bottom:6px;">My notes</div>
+               <ul style="color:var(--muted); padding-left: 1.2rem; margin: 0;">
+                 <li>Finished refining the TASOPT stick-figure function. It’s invaluable for sanity-checking dozens of internal parameters: seat fit within the fuselage, tank radius versus fuselage, engine diameter bounds, and more. A current gap is the lack of a forcing function that trims fuselage length or enforces longitudinal fit. Worth exploring features to guarantee lengthwise packing and reserving fixed length/area for cockpit, galley, lavs, forward radar, and the APU.</li>
+                 <li>With ChatGPT, drafted a bidirectional path: .toml → aircraft struct → .toml, preserving comments and file structure so mid-optimization states can be saved and tweaked for different missions (pax, range). A demo works; next steps are refinement and alignment with TASOPT stakeholders. First proper subagent use: (a) implement core code, (b) write tests, (c) produce a demo.</li>
+                 <li>Retuned .toml values for regional, narrow-body, wide-body, plus CH4 and H2 aircraft. Goal: get Jet‑A cases to match reference aircraft on length, MTOW, range, and balanced field length; applied similar learnings to CH4/H2 (no good benchmarks yet). For example, set update_cabin_length = true.</li>
+               </ul>
+             </div>
+           </div>
+         </div>
+
+         <div class="log-entry reveal">
+           <div class="log-date">29 Sept 2026 &middot; Fuel reserves, new fuels, task fan-out</div>
+           <div class="entry-grid">
+             <div class="agent-col">
+               <div class="log-section-label" style="font-weight:700; color:var(--muted); font-size:0.9rem; margin-bottom:6px;">Agent log</div>
+               <p>&nbsp;</p>
+             </div>
+             <div class="notes-col">
+               <div class="log-section-label" style="font-weight:700; color:var(--muted); font-size:0.9rem; margin-bottom:6px;">My notes</div>
+               <ul style="color:var(--muted); padding-left: 1.2rem; margin: 0;">
+                 <li>Yesterday’s sticking point: choosing a consistent fuel‑reserve fraction across the .toml fleet. Embedded examples varied without an obvious rationale. Asked Sonnet 5.0 to implement a reserve calculator: 45‑minute hold after destination at ~14,000 ft and ~230 KIAS. Reviewed and tuned assumptions, then opened a PR.</li>
+                 <li>Tasked Sonnet 4.6 with adding ethanol, ethane, and ethylene fuel capabilities. Ethane existed. Ethylene initially failed a thermodynamics iteration; fixed by raising the solver’s max iterations. Ethanol remains untested due to a harness bug.</li>
+                 <li>Near EOM with tokens to spare, I fanned work across sessions: (a) Opus 5.0 — TBW configuration plan, assumptions, and checks for TASOPT breakage; (b) Opus 5.0 — CF material properties for cryogenic tanks and a TASOPT material‑selection plan (Al vs CF); (c) Sonnet 4.6 — implement the additional fuels; (d) Sonnet 5.0 (nono pi) — propose staged changes to speed up cryogenic tank logic while managing stability risks. The plans for (a) and (b) will take hours to digest and refine.</li>
+               </ul>
+             </div>
+           </div>
+         </div>
+
+         <div class="log-entry reveal">
+           <div class="log-date">30 Sept 2026 &middot; Cryo logic tests, aircraft views, agent takeaways</div>
+           <div class="entry-grid">
+             <div class="agent-col">
+               <div class="log-section-label" style="font-weight:700; color:var(--muted); font-size:0.9rem; margin-bottom:6px;">Agent log</div>
+               <p>&nbsp;</p>
+             </div>
+             <div class="notes-col">
+               <div class="log-section-label" style="font-weight:700; color:var(--muted); font-size:0.9rem; margin-bottom:6px;">My notes</div>
+               <ul style="color:var(--muted); padding-left: 1.2rem; margin: 0;">
+                 <li>Spent remaining tokens testing early cryogenic‑logic tweaks. Relaxed tolerances looked good on paper but reduced stability in practice. Incremental, test‑gated changes are the path to speedups without making TASOPT temperamental.</li>
+                 <li>First pass at front and side views of TASOPT aircraft. The agent’s draft was a solid start; I hand‑edited to match the intended look. The side view shows a “chin” driven by dR; need to confirm whether dR applies only to the wing‑box region or the whole fuselage, and how to plot it consistently in side and front views.</li>
+                 <li>Agent lessons from the week: (a) Top‑tier, expensive models are best for thorough implementation plans, assumptions, and scoping subagents with clear bounds. (b) Sonnet 5.x is strong at complex implementation and bite‑sized plans; tends to avoid subagents and prefers direct TDD. (c) 4.x (Haiku/Sonnet) is fast but prone to oversimplification and hard‑coded assumptions; Haiku overuses emojis and verbosity for summaries/docs. Tight scoping is mandatory for complex code.</li>
+               </ul>
+             </div>
+           </div>
+         </div>
+
          <!-- ====================================================== -->
 
                                                                                             
