@@ -360,12 +360,139 @@
 
          <!-- ====================================================== -->
 
-                                                                                            
-       </div>                                                                               
+         <div class="log-entry reveal">
+           <div class="log-date">2 Oct 2026 &middot; Monthly budget</div>
+           <div class="entry-grid">
+             <div class="agent-col">
+               <div class="log-section-label" style="font-weight:700; color:var(--muted); font-size:0.9rem; margin-bottom:6px;">Agent log</div>
+               <p>&nbsp;</p>
+             </div>
+             <div class="notes-col">
+               <div class="log-section-label" style="font-weight:700; color:var(--muted); font-size:0.9rem; margin-bottom:6px;">My notes</div>
+               <p style="color:var(--muted);">Monthly budget had not been reset.</p>
+             </div>
+           </div>
+         </div>
+
+         <div class="log-entry reveal">
+           <div class="log-date">3 Oct 2026 &middot; New thermodynamic values for alternative fuels</div>
+           <div class="entry-grid">
+             <div class="agent-col">
+               <div class="log-section-label" style="font-weight:700; color:var(--muted); font-size:0.9rem; margin-bottom:6px;">Agent log</div>
+               <p>&nbsp;</p>
+             </div>
+             <div class="notes-col">
+               <div class="log-section-label" style="font-weight:700; color:var(--muted); font-size:0.9rem; margin-bottom:6px;">My notes</div>
+               <p style="color:var(--muted);">After three days of recreating TASOPT's current thermodynamic values (tables, equations, parameters), I produced values for ethanol, ethane, and ethylene. The agent inserted some irrelevant numbers; numerically they were the right order of magnitude but contained random noise. I left comments in the files where applicable to explain how specific values were derived from NIST data to avoid future guesswork. A pull request was submitted. This took substantially more manual labour than expected: the agent set up the coding pipeline and ran it without errors (~30 minutes of agent time), but the thermodynamic value debugging required 2–3 days of trial and error.</p>
+             </div>
+           </div>
+         </div>
+
+         <div class="log-entry reveal">
+           <div class="log-date">4 Oct 2026 &middot; Carbon-fibre cryotank review</div>
+           <div class="entry-grid">
+             <div class="agent-col">
+               <div class="log-section-label" style="font-weight:700; color:var(--muted); font-size:0.9rem; margin-bottom:6px;">Agent log</div>
+               <p>&nbsp;</p>
+             </div>
+             <div class="notes-col">
+               <div class="log-section-label" style="font-weight:700; color:var(--muted); font-size:0.9rem; margin-bottom:6px;">My notes</div>
+               <p style="color:var(--muted);">Reviewed the carbon-fibre cryotank implementation plan. The agent may have found a minor engineering equation error (to review later). Need to verify the claim that a minimum of eight CF layers is required for the composite tank. The first implementation will retain the aluminium ring stiffness despite the mismatch in coefficient of thermal expansion with carbon fibre. I also need to review the engineering spec sheets found for the proposed layups (80% 90/0 and 20% 45/45).</p>
+             </div>
+           </div>
+         </div>
+
+         <div class="log-entry reveal">
+           <div class="log-date">5 Oct 2026 &middot; Parley API access restored</div>
+           <div class="entry-grid">
+             <div class="agent-col">
+               <div class="log-section-label" style="font-weight:700; color:var(--muted); font-size:0.9rem; margin-bottom:6px;">Agent log</div>
+               <p>&nbsp;</p>
+             </div>
+             <div class="notes-col">
+               <div class="log-section-label" style="font-weight:700; color:var(--muted); font-size:0.9rem; margin-bottom:6px;">My notes</div>
+               <p style="color:var(--muted);">Able to use the Parley API again after Prashanth increased the monthly budget on my key.</p>
+             </div>
+           </div>
+         </div>
+
+         <div class="log-entry reveal">
+           <div class="log-date">7 Oct 2026 &middot; Aircraft front and side view refinement</div>
+           <div class="entry-grid">
+             <div class="agent-col">
+               <div class="log-section-label" style="font-weight:700; color:var(--muted); font-size:0.9rem; margin-bottom:6px;">Agent log</div>
+               <p>&nbsp;</p>
+             </div>
+             <div class="notes-col">
+               <div class="log-section-label" style="font-weight:700; color:var(--muted); font-size:0.9rem; margin-bottom:6px;">My notes</div>
+               <p style="color:var(--muted);">Front and side view functions now generate a refined perspective of the aircraft struct passed into them. A few cases look off (double-decker, double-bubble, and dR ≈ 0). Getting close to a pull request. From the 6 Oct class discussion: a simple AI query within TASOPT with a bit of code building costs $2–$3 because it consumes many tokens to read the codebase. A lookup table showing where each parameter and function is used would help the agent avoid expensive full-file reads.</p>
+             </div>
+           </div>
+         </div>
+
+         <div class="log-entry reveal">
+           <div class="log-date">8 Oct 2026 &middot; Code graph & first iteration</div>
+           <div class="entry-grid">
+             <div class="agent-col">
+               <div class="log-section-label" style="font-weight:700; color:var(--muted); font-size:0.9rem; margin-bottom:6px;">Agent log</div>
+               <p>&nbsp;</p>
+             </div>
+             <div class="notes-col">
+               <div class="log-section-label" style="font-weight:700; color:var(--muted); font-size:0.9rem; margin-bottom:6px;">My notes</div>
+               <p style="color:var(--muted);">From class discussion: build a code graph that an agent can use, building on Julia's LSP. The first iteration was developed with Opus 5.5 (cost ≈ $2.50). It produced 1,200 lines of cryptic, nested code that was hard to review or perform V&V on. Prashanth suggested standardising the interface to the code graph; another $2.00 was spent with Sophos 5.5 to standardise it, and a further $2 was spent developing unit tests and debugging. I can now call the tool myself and verify outputs. An Agent.md file and a skill were developed in parallel. Several TODOs remain.</p>
+             </div>
+           </div>
+         </div>
+
+         <div class="log-entry reveal">
+           <div class="log-date">10 Oct 2026 &middot; Cryotank speed-up review and API key issues</div>
+           <div class="entry-grid">
+             <div class="agent-col">
+               <div class="log-section-label" style="font-weight:700; color:var(--muted); font-size:0.9rem; margin-bottom:6px;">Agent log</div>
+               <p>&nbsp;</p>
+             </div>
+             <div class="notes-col">
+               <div class="log-section-label" style="font-weight:700; color:var(--muted); font-size:0.9rem; margin-bottom:6px;">My notes</div>
+               <p style="color:var(--muted);">Reviewed all cryotank speed-up changes to prepare a pull request. After lunch the API key stopped working, so I could not continue refining layout.jl unit tests with the AI agent. Added an issue on vacuum insulation because temperatures could become noisy or show a discontinuous kink. The code map is missing a couple of updates before it can become a versatile tool; new tests have been developed and more unit tests are required for the planned functionality.</p>
+             </div>
+           </div>
+         </div>
+
+         <div class="log-entry reveal">
+           <div class="log-date">12 Oct 2026 &middot; Side/front view fixes and agent cost takeaway</div>
+           <div class="entry-grid">
+             <div class="agent-col">
+               <div class="log-section-label" style="font-weight:700; color:var(--muted); font-size:0.9rem; margin-bottom:6px;">Agent log</div>
+               <p>&nbsp;</p>
+             </div>
+             <div class="notes-col">
+               <div class="log-section-label" style="font-weight:700; color:var(--muted); font-size:0.9rem; margin-bottom:6px;">My notes</div>
+               <p style="color:var(--muted);">Regenerated the course API key — it now returns that the user is not authenticated. I manually performed the last tweaks for the side and front views: the remaining oddball was the dR parameter. Using plots revealed a bug for the double-decker case: the cargo-hold height constraint was passing with an unphysical value because the logic allowed the cargo-hold height to be negative. Visualising numbers with figures is much easier to interpret than skimming hundreds of values. Agent takeaway: do not use the 4.x-generation Claude agents — they are more expensive per token and less capable than the current 5th-generation models, meaning they require more attempts (more tokens) to run, open, or update files. Only the cryotank speed-up remains open before starting new developments (CF tanks, TBW, folding wing tips).</p>
+             </div>
+           </div>
+         </div>
+
+         <div class="log-entry reveal">
+           <div class="log-date">13 Oct 2026 &middot; Terminal session API key inconsistency</div>
+           <div class="entry-grid">
+             <div class="agent-col">
+               <div class="log-section-label" style="font-weight:700; color:var(--muted); font-size:0.9rem; margin-bottom:6px;">Agent log</div>
+               <p>&nbsp;</p>
+             </div>
+             <div class="notes-col">
+               <div class="log-section-label" style="font-weight:700; color:var(--muted); font-size:0.9rem; margin-bottom:6px;">My notes</div>
+               <p style="color:var(--muted);">An existing terminal session still returns an unauthorized key, but a new terminal session does not have that issue.</p>
+             </div>
+           </div>
+         </div>
+
+         <!-- ====================================================== -->
+
+       </div>                                                                                
      </section>                                                                             
-                                                                                            
-   </main>                                                                                  
-                                                                                            
+                                                                                             
+   </main>                                                                                   
+                                                                                             
    <script src="js/nav.js"></script>                                                        
-   </body>                                                                                  
-   </html> 
+   </body>                                                                                   
+   </html>
