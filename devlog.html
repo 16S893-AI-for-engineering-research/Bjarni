@@ -486,6 +486,80 @@
            </div>
          </div>
 
+         <div class="log-entry reveal">
+           <div class="log-date">14–18 Oct 2026 &middot; Carbon-fibre fuel tank capability</div>
+           <div class="entry-grid">
+             <div class="agent-col">
+               <div class="log-section-label" style="font-weight:700; color:var(--muted); font-size:0.9rem; margin-bottom:6px;">Agent log</div>
+               <p>&nbsp;</p>
+             </div>
+             <div class="notes-col">
+               <div class="log-section-label" style="font-weight:700; color:var(--muted); font-size:0.9rem; margin-bottom:6px;">My notes</div>
+               <ul style="color:var(--muted); padding-left:1.2rem; margin:0;">
+                 <li><strong>Challenges:</strong> I have limited knowledge of classical laminate theory and Basquin’s equation, including how different composite structural failure modes combine or overlap and how cryogenic conditions affect them. It helps that I am already quite familiar with this part of TASOPT.</li>
+                 <li><strong>Learnings:</strong> Claude 5.5 agents have a higher token throughput, their command-line prompts are substantially less likely to produce errors, and they learn much faster how to call the local TASOPT code in the current repository. Sonnet is the everyday workhorse, while Opus is reserved for development planning. I had not had a good experience with Haiku previously, so I have not used it regularly.</li>
+                 <li><strong>Focus:</strong> Developing carbon-fibre fuel-tank capability in TASOPT and identifying the engineering assumptions that most affect its benefits over an aluminium tank. These include the maximum strain allowed during thermal and pressure cycles (as a function of temperature) and the minimum number of carbon-fibre layers needed to contain liquids.</li>
+                 <li><strong>Unresolved:</strong> Review the underlying classical-laminate-theory code used to derive the carbon-fibre parameters for a sandwich layer, and review Basquin’s equation to estimate the maximum repeated load over an aircraft’s 30-year operating life. The definition of tank failure also needs clarification: does a microfracture count, or must a crack extend through the material thickness? Could a 1&nbsp;&micro;m-diameter fracture be acceptable?</li>
+               </ul>
+             </div>
+           </div>
+         </div>
+
+         <div class="log-entry reveal">
+           <div class="log-date">19–21 Oct 2026 &middot; TASOPT code map, tank performance, aircraft views, folding wingtips, TBW preparation</div>
+           <div class="entry-grid">
+             <div class="agent-col">
+               <div class="log-section-label" style="font-weight:700; color:var(--muted); font-size:0.9rem; margin-bottom:6px;">Agent log</div>
+               <p>&nbsp;</p>
+             </div>
+             <div class="notes-col">
+               <div class="log-section-label" style="font-weight:700; color:var(--muted); font-size:0.9rem; margin-bottom:6px;">My notes</div>
+               <ul style="color:var(--muted); padding-left:1.2rem; margin:0;">
+                 <li><strong>Challenges:</strong> Claude 5.5 has reduced the cost of TASOPT tasks, but it is still difficult to complete anything for less than $2. How can the cost of small updates be reduced further? Agents need to read multiple files before modifying TASOPT, increasing context requirements and cost.</li>
+                 <li><strong>Learnings:</strong> Using ChatGPT’s web interface to develop and refine ideas for an open-ended project helped narrow the scope of the TASOPT code-map effort. I also refined the TASOPT pull-request process.</li>
+                 <li><strong>Focus:</strong> Develop a skill and tool that lets an AI agent inspect the TASOPT codebase without reading the source files themselves; finish side projects that have resulted in pull requests; and address bugs and issues found while preparing for the TBW work.</li>
+                 <li><strong>Unresolved:</strong> How useful will the code map be, and was it worth several hours of development and $20 from the monthly budget?</li>
+               </ul>
+             </div>
+           </div>
+         </div>
+
+         <div class="log-entry reveal">
+           <div class="log-date">22 Oct–2 Nov 2026 &middot; Truss-braced wing (TBW) implementation</div>
+           <div class="entry-grid">
+             <div class="agent-col">
+               <div class="log-section-label" style="font-weight:700; color:var(--muted); font-size:0.9rem; margin-bottom:6px;">Agent log</div>
+               <p>&nbsp;</p>
+             </div>
+             <div class="notes-col">
+               <div class="log-section-label" style="font-weight:700; color:var(--muted); font-size:0.9rem; margin-bottom:6px;">My notes</div>
+               <ul style="color:var(--muted); padding-left:1.2rem; margin:0;">
+                 <li><strong>Challenges:</strong> The sheer volume of small steps in the TBW update was overwhelming: roughly 70 steps, many requiring a new session. Agents often returned with three to five questions per step, which took significant effort to resolve because I was unfamiliar with this part of TASOPT. Initially, I requested too many steps at once, resulting in more than 1,000 lines of changes that were extremely difficult to trace back to individual requests. There have been 227 commits so far, with about a dozen open issues remaining. It was also difficult at times to connect each action item to the overall TBW goal, particularly while building the required I/O capabilities.</li>
+                 <li><strong>Learnings:</strong> Writing concise, tightly scoped prompts for each step with ChatGPT’s web interface helped establish a robust workflow: request a bounded step, let the agent identify ambiguities, resolve them, then assign a test developer and an implementer. Haiku 5.5 was faster and cheaper than Sonnet, but tended to create new files rather than integrate with the existing code and could hardcode assumptions instead of using declared parameters. The TBW plan was detailed initially but became less clear at the aerodynamic implementation stage; Opus 5.5 struggled to produce a sufficiently clear high-level plan. No TBW agent reported that the code map was not working as intended or that it had to read files because the map did not match the TASOPT code. In a few cases, agents proposed novel approaches rather than using the existing wing architecture—for example, initially modelling a solid metal strut instead of a cap-and-web structure.</li>
+                 <li><strong>Focus:</strong> Use as much of the monthly budget as possible to advance the TBW implementation.</li>
+                 <li><strong>Unresolved:</strong> Many implementation issues remain, and several assumptions need closer consideration. Review the SUGAR documentation to establish reasonable values for key parameters. The TBW work still needs significant time; progress is currently limited by the lack of folding-wingtip capability and the use of metallic-alloy wings only. Separately, while running VS Code or Pi in the terminal, the Command-Tab shortcut sometimes stops working. Restarting the computer fixes it, but the issue returns after a few hours.</li>
+               </ul>
+             </div>
+           </div>
+         </div>
+
+         <div class="log-entry reveal">
+           <div class="log-date">2 Nov 2026 &middot; Airfoil data limits and model validation</div>
+           <div class="entry-grid">
+             <div class="agent-col">
+               <div class="log-section-label" style="font-weight:700; color:var(--muted); font-size:0.9rem; margin-bottom:6px;">Agent log</div>
+               <p>&nbsp;</p>
+             </div>
+             <div class="notes-col">
+               <div class="log-section-label" style="font-weight:700; color:var(--muted); font-size:0.9rem; margin-bottom:6px;">My notes</div>
+               <ul style="color:var(--muted); padding-left:1.2rem; margin:0;">
+                 <li>Used the <code>walkthrough</code> to investigate whether TASOPT’s airfoil dataset was limiting the TBW benefits, since the model was operating outside the dataset’s bounds. Prompts that made comparisons visible were useful. For example, I had not realised that, according to the walkthrough, TASOPT’s airfoil dataset is capped at Mach 0.8.</li>
+                 <li>My core contribution is developing new engineering models on top of TASOPT to enable design-space analysis of aircraft performance across fuels and configurations. These engineering models are therefore a core contribution. My emphasis should be less on line-by-line code changes and more on verification and validation (V&amp;V) of model outputs. Find papers that enable benchmarking and show whether standalone models agree within a few percent of published values under similar assumptions.</li>
+               </ul>
+             </div>
+           </div>
+         </div>
+
          <!-- ====================================================== -->
 
        </div>                                                                                
